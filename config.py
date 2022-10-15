@@ -3,12 +3,11 @@ from typing import List, Tuple
 
 
 class BaseCfg:
-    def __init__(self, model_cfg, input_size=None):
+    def __init__(self, num_classes, input_size=None):
         self.epoch = 50
         self.batch_size = 8
+        self.num_classes = num_classes
 
-        if model_cfg is not None and isinstance(model_cfg, dict):
-            self.input_size = model_cfg["input_size"]
         if input_size is None:
             self.input_size = (224, 224)
         else:
