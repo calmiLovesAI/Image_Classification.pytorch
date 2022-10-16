@@ -15,3 +15,6 @@ class BaseCfg:
                 self.input_size = tuple(input_size)
             if isinstance(input_size, (int, float)):
                 self.input_size = (input_size, input_size)
+
+        self.dataset_root = ""
+        
