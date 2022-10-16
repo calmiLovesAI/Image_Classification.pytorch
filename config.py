@@ -17,4 +17,5 @@ class BaseCfg:
                 self.input_size = (input_size, input_size)
 
         self.dataset_root = ""
+
         

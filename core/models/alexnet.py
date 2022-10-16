@@ -79,6 +79,9 @@ class AlexNet(nn.Module):
     def get_input_shape():
         return 227, 227
 
+    def __repr__(self):
+        return "AlexNet"
+
 
 if __name__ == '__main__':
     sample_x = torch.rand(1, 3, 227, 227)     # N, C, H, W
