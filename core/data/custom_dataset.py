@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import cv2
-import numpy as np
+import torch
 from torch.utils.data import Dataset
 
 
@@ -28,7 +28,7 @@ class ImageDataset(Dataset):
 
     def __getitem__(self, item):
         image_path, label = self.images[item]
-        label = np.array(self.class2id[label], dtype=np.float32)
+        label = torch.tensor(self.class2id[label], dtype=torch.float32)
         # 读取图片
         image = cv2.imread(image_path, cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
