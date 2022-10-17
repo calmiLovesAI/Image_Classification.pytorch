@@ -24,15 +24,16 @@ def train_loop(cfg, model, dataloader, device):
 
     for epoch in range(epochs):
         with tqdm(dataloader, desc="Epoch-{}/{}".format(epoch, epochs)) as pbar:
-            for i, (images, targets) in enumerate(dataloader):
+            for i, (images, targets) in enumerate(pbar):
 
                 images = images.to(device)
-                targets = targets.to(device, dtype=torch.int64)
+                targets = targets.to(device)
 
-                optimizer.zero_grad()
                 preds = model(images)
                 loss = loss_fn(preds, targets)
                 loss_mean.update(loss.item())
+
+                optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
 

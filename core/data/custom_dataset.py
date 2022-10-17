@@ -27,7 +27,7 @@ class ImageDataset(Dataset):
 
     def __getitem__(self, item):
         image_path, label = self.images[item]
-        label = torch.tensor(self.class2id[label], dtype=torch.float32)
+        label = torch.tensor(self.class2id[label], dtype=torch.int64)
         # 读取图片
         image = cv2.imread(image_path, cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
