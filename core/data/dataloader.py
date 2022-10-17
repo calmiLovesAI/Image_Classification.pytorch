@@ -20,6 +20,7 @@ class BaseLoader:
     def __call__(self, *args, **kwargs):
         dataset = ImageDataset(self.cfg["Custom"]["root"], transform=self.transforms, target_transform=None)
         classes, num_classes = dataset.get_classes()
+        print("正在使用{}, 其中有{}个图像类别，分别为：{}".format(dataset, num_classes, classes))
         return classes, num_classes, DataLoader(dataset, batch_size=self.batch_size, shuffle=True)
 
 

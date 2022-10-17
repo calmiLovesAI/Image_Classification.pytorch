@@ -40,3 +40,6 @@ class ImageDataset(Dataset):
 
     def get_classes(self):
         return self.classes, len(self.classes)
+
+    def __repr__(self):
+        return "自定义数据集"
