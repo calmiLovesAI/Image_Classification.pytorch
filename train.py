@@ -2,6 +2,7 @@ import time
 from pathlib import Path
 
 import torch
+from tqdm.contrib import tenumerate
 
 from core.data import load_dataset
 from core.loss import cross_entropy_loss
@@ -23,7 +24,7 @@ def train_loop(cfg, model, dataloader, device):
     loss_mean = MeanMetric()
 
     for epoch in range(epochs):
-        for i, (images, targets) in enumerate(dataloader):
+        for i, (images, targets) in tenumerate(dataloader):
             start_time = time.time()
 
             images = images.to(device)
@@ -36,13 +37,13 @@ def train_loop(cfg, model, dataloader, device):
             loss.backward()
             optimizer.step()
 
-            print("Epoch: {}/{}, step: {}/{}, speed: {:.3f}s/step, total_loss: {}, ".format(epoch,
-                                                                                            epochs,
-                                                                                            i,
-                                                                                            len(dataloader),
-                                                                                            time.time() - start_time,
-                                                                                            loss_mean.result(),
-                                                                                            ))
+            # print("Epoch: {}/{}, step: {}/{}, speed: {:.3f}s/step, total_loss: {}, ".format(epoch,
+            #                                                                                 epochs,
+            #                                                                                 i,
+            #                                                                                 len(dataloader),
+            #                                                                                 time.time() - start_time,
+            #                                                                                 loss_mean.result(),
+            #                                                                                 ))
 
         loss_mean.reset()
 
