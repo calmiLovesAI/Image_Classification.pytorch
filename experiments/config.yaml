@@ -1,6 +1,6 @@
 Train:
   epochs: 50
-  batch_size: 4
+  batch_size: 8
   # 输入图片大小：(C, H, W)
   input_size:
     - 3

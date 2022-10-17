@@ -2,7 +2,7 @@ import time
 from pathlib import Path
 
 import torch
-from tqdm.contrib import tenumerate
+from tqdm import tqdm
 
 from core.data import load_dataset
 from core.loss import cross_entropy_loss
@@ -24,26 +24,20 @@ def train_loop(cfg, model, dataloader, device):
     loss_mean = MeanMetric()
 
     for epoch in range(epochs):
-        for i, (images, targets) in tenumerate(dataloader):
-            start_time = time.time()
+        with tqdm(dataloader, desc="Epoch-{}/{}".format(epoch, epochs)) as pbar:
+            for i, (images, targets) in enumerate(pbar):
 
-            images = images.to(device)
-            targets = targets.to(device, dtype=torch.int64)
+                images = images.to(device)
+                targets = targets.to(device, dtype=torch.int64)
 
-            optimizer.zero_grad()
-            preds = model(images)
-            loss = loss_fn(preds, targets)
-            loss_mean.update(loss.item())
-            loss.backward()
-            optimizer.step()
+                optimizer.zero_grad()
+                preds = model(images)
+                loss = loss_fn(preds, targets)
+                loss_mean.update(loss.item())
+                loss.backward()
+                optimizer.step()
 
-            # print("Epoch: {}/{}, step: {}/{}, speed: {:.3f}s/step, total_loss: {}, ".format(epoch,
-            #                                                                                 epochs,
-            #                                                                                 i,
-            #                                                                                 len(dataloader),
-            #                                                                                 time.time() - start_time,
-            #                                                                                 loss_mean.result(),
-            #                                                                                 ))
+                pbar.set_postfix({"loss": "{}".format(loss_mean.result())})
 
         loss_mean.reset()
 
