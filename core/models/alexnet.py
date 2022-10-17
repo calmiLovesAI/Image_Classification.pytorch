@@ -1,9 +1,11 @@
+import warnings
+
 import torch
 import torch.nn as nn
 
 
 class AlexNet(nn.Module):
-    def __init__(self, num_classes):
+    def __init__(self, cfg, num_classes):
         """
         URL: https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf
         @article{krizhevsky2017imagenet,
@@ -18,7 +20,13 @@ class AlexNet(nn.Module):
         }
         """
         super(AlexNet, self).__init__()
-        self.conv1 = nn.Conv2d(in_channels=3, out_channels=96, kernel_size=11,
+
+        c_in = cfg["Train"]["input_size"][0]
+        input_shape = tuple(cfg["Train"]["input_size"][1:])
+        if input_shape != (227, 227):
+            warnings.warn("你正在使用的输入图片大小：{}与AlexNet默认的输入图片大小：(227, 227)不符！".format(input_shape))
+
+        self.conv1 = nn.Conv2d(in_channels=c_in, out_channels=96, kernel_size=11,
                                stride=4, padding=0)
         self.bn1 = nn.BatchNorm2d(num_features=96)
         self.pool1 = nn.MaxPool2d(kernel_size=3, stride=2, padding=0)
@@ -75,12 +83,6 @@ class AlexNet(nn.Module):
 
         return x
 
-    @staticmethod
-    def get_input_shape():
-        return 227, 227
-
-    def __repr__(self):
-        return "AlexNet"
 
 
 if __name__ == '__main__':

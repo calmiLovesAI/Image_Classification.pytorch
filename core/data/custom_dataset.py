@@ -6,12 +6,12 @@ from torch.utils.data import Dataset
 
 
 class ImageDataset(Dataset):
-    def __init__(self, cfg, transform=None, target_transform=None):
+    def __init__(self, root, transform=None, target_transform=None):
         super(ImageDataset, self).__init__()
         self.transform = transform
         self.target_transform = target_transform
 
-        self.images_root = cfg.dataset_root
+        self.images_root = root
         self.images = list()
         # 获取所有的图片路径和它们所属的类别
         for img_dir in Path(self.images_root).rglob("*.*"):
@@ -39,4 +39,4 @@ class ImageDataset(Dataset):
         return image, label
 
     def get_classes(self):
-        return self.classes, self.class2id
+        return self.classes, len(self.classes)

@@ -1,0 +1,10 @@
+Train:
+  epoch: 50
+  batch_size: 8
+  # 输入图片大小：(C, H, W)
+  input_size:
+    - 3
+    - 227
+    - 227
+  # 模型保存频率
+  save_frequency: 5
