@@ -12,6 +12,7 @@ class Yaml:
         for file in self.filepath:
             print("解析 {}...".format(self.filepath))
             with open(file, encoding="utf-8") as f:
-                cfg |= yaml.load(f.read(), Loader=yaml.FullLoader)
+                # cfg |= yaml.load(f.read(), Loader=yaml.FullLoader)
+                cfg.update(yaml.load(f.read(), Loader=yaml.FullLoader))
         print("合并解析结果")
         return cfg

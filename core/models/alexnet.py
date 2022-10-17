@@ -56,7 +56,6 @@ class AlexNet(nn.Module):
         self.fc2 = nn.Linear(in_features=4096, out_features=4096)
         self.drop2 = nn.Dropout(p=0.5)
         self.fc3 = nn.Linear(in_features=4096, out_features=num_classes)
-        self.activation = nn.Softmax(dim=-1)
 
     def forward(self, x):
         """
@@ -80,7 +79,7 @@ class AlexNet(nn.Module):
         x = self.drop1(x)
         x = self.fc2(x)
         x = self.drop2(x)
-        x = self.activation(self.fc3(x))
+        x = self.fc3(x)
 
         return x
 

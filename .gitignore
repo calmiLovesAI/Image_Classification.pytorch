@@ -4,3 +4,5 @@ __pycache__
 !/datasets/README.md
 test.py
 /experiments/data.yaml
+/saves/*
+!/saves/README.md

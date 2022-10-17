@@ -1,4 +1,3 @@
-import time
 from pathlib import Path
 
 import torch
@@ -25,7 +24,7 @@ def train_loop(cfg, model, dataloader, device):
 
     for epoch in range(epochs):
         with tqdm(dataloader, desc="Epoch-{}/{}".format(epoch, epochs)) as pbar:
-            for i, (images, targets) in enumerate(pbar):
+            for i, (images, targets) in enumerate(dataloader):
 
                 images = images.to(device)
                 targets = targets.to(device, dtype=torch.int64)
@@ -38,7 +37,6 @@ def train_loop(cfg, model, dataloader, device):
                 optimizer.step()
 
                 pbar.set_postfix({"loss": "{}".format(loss_mean.result())})
-
         loss_mean.reset()
 
         if epoch % save_frequency == 0:
