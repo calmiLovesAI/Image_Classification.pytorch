@@ -20,6 +20,7 @@ class AlexNet(nn.Module):
         }
         """
         super(AlexNet, self).__init__()
+        self.model_name = "AlexNet"
 
         c_in = cfg["Train"]["input_size"][0]
         input_shape = tuple(cfg["Train"]["input_size"][1:])
