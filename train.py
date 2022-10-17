@@ -27,7 +27,7 @@ def train_loop(cfg, model, dataloader, device):
             start_time = time.time()
 
             images = images.to(device)
-            targets = targets.to(device)
+            targets = targets.to(device, dtype=torch.int64)
 
             optimizer.zero_grad()
             preds = model(images)

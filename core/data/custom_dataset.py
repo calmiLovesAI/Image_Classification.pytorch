@@ -15,9 +15,8 @@ class ImageDataset(Dataset):
         self.images = list()
         # 获取所有的图片路径和它们所属的类别
         for img_dir in Path(self.images_root).rglob("*.*"):
-            image_dir = str(img_dir)
             image_class = img_dir.parts[-2]
-            self.images.append([image_dir, image_class])
+            self.images.append([str(img_dir), image_class])
 
         # 'self.images_root'路径下的文件夹名就是类别名
         self.classes = [f.name for f in Path(self.images_root).iterdir()]
