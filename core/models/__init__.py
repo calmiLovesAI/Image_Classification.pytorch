@@ -1,7 +1,10 @@
 from .alexnet import AlexNet
+from .vgg import VGG16, VGG19
 
 MODELS = {
     0: [AlexNet, "AlexNet"],
+    1: [VGG16, "VGG16"],
+    2: [VGG19, "VGG19"]
 }
 
 

@@ -21,11 +21,11 @@ class AlexNet(nn.Module):
         """
         super(AlexNet, self).__init__()
         self.model_name = "AlexNet"
-
+        default_shape = (227, 227)
         c_in = cfg["Train"]["input_size"][0]
         input_shape = tuple(cfg["Train"]["input_size"][1:])
-        if input_shape != (227, 227):
-            warnings.warn("你正在使用的输入图片大小：{}与AlexNet默认的输入图片大小：(227, 227)不符！".format(input_shape))
+        if input_shape != default_shape:
+            warnings.warn("你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name, default_shape))
 
         self.conv1 = nn.Conv2d(in_channels=c_in, out_channels=96, kernel_size=11,
                                stride=4, padding=0)
