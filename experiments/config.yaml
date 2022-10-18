@@ -4,8 +4,8 @@ Train:
   # 输入图片大小：(C, H, W)
   input_size:
     - 3
-    - 227
-    - 227
+    - 224
+    - 224
   learning_rate: 0.001
   # 模型保存频率
   save_frequency: 5
