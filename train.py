@@ -49,6 +49,7 @@ def train_loop(cfg, model, dataloader, device):
         if epoch % save_frequency == 0:
             torch.save(model.state_dict(), Path(save_path).joinpath("{}_epoch-{}.pth".format(model.model_name, epoch)))
 
+    torch.save(model.state_dict(), Path(save_path).joinpath("{}_weights.pth".format(model.model_name)))
     torch.save(model, Path(save_path).joinpath("{}_entire_model.pth".format(model.model_name)))
 
 
