@@ -25,15 +25,14 @@ def train_loop(cfg, model, dataloader, device):
     for epoch in range(epochs):
         with tqdm(dataloader, desc="Epoch-{}/{}".format(epoch, epochs)) as pbar:
             for i, (images, targets) in enumerate(pbar):
-
                 images = images.to(device)
                 targets = targets.to(device)
 
+                optimizer.zero_grad()
                 preds = model(images)
                 loss = loss_fn(preds, targets)
                 loss_mean.update(loss.item())
 
-                optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
 
@@ -55,7 +54,6 @@ if __name__ == '__main__':
 
     # 加载数据集
     classes, num_classes, train_dataloader = load_dataset(cfg)
-    print("nc = {}".format(num_classes))
 
     # 创建网络模型
     model = select_model()(cfg, num_classes)
