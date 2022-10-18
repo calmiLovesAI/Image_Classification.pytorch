@@ -3,9 +3,10 @@ from typing import List
 import cv2
 import numpy as np
 import torch
+import torchvision.transforms.functional as F
 
 
-def read_image(image_paths:List[str], add_dim=False, convert_to_tensor=False):
+def read_image(image_paths:List[str], add_dim=False, convert_to_tensor=False, resize=False, size=None):
     n = len(image_paths)
     if n == 1:
         # 只有一张图片
@@ -22,8 +23,11 @@ def read_image(image_paths:List[str], add_dim=False, convert_to_tensor=False):
             image_list.append(image)
         image_array = np.stack(image_list, axis=0)
     if convert_to_tensor:
+        image_array = image_array.astype(np.float32)
         image_array /= 255.0
         image_tensor = torch.from_numpy(image_array)   # (N, H, W, C)
-        image_tensor = torch.permute(image_tensor, dims=(0, 2, 3, 1))  # (N, C, H, W)
+        image_tensor = torch.permute(image_tensor, dims=(0, 3, 1, 2))  # (N, C, H, W)
+        if resize and size is not None:
+            image_tensor = F.resize(image_tensor, size)
         return image_tensor
     return image_array

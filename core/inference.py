@@ -14,7 +14,7 @@ class Classify:
         pred = pred.cpu().numpy()
         prob = prob.cpu().numpy()
         for i in range(pred.shape[0]):
-            print("第{}张图片的类别是{}，预测概率为：{}".format(i, self.class_name[pred][i], prob[i]))
+            print("第{}张图片的类别是{}，预测概率为：{}".format(i, self.class_name[pred[i]], prob[i]))
 
     def process_image(self):
         n = self.images.size(0)  # 图片数量
