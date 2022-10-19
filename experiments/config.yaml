@@ -6,7 +6,7 @@ Train:
     - 3
     - 224
     - 224
-  learning_rate: 0.001
+  learning_rate: 0.0001
   # 模型保存频率
   save_frequency: 5
   # 保存路径
