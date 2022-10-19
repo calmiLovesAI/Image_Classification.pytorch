@@ -6,6 +6,15 @@ import torch.nn as nn
 
 class BaseVGG(nn.Module):
     def __init__(self, cfg, structure, num_classes, use_bn=True):
+        """
+        URL: https://arxiv.org/abs/1409.1556
+        @article{simonyan2014very,
+          title={Very deep convolutional networks for large-scale image recognition},
+          author={Simonyan, Karen and Zisserman, Andrew},
+          journal={arXiv preprint arXiv:1409.1556},
+          year={2014}
+        }
+        """
         super(BaseVGG, self).__init__()
         c_in = cfg["Train"]["input_size"][0]
         self.structure = structure
