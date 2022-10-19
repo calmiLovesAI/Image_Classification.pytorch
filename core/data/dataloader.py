@@ -1,4 +1,5 @@
 from torch.utils.data import DataLoader
+from torchvision.datasets import CIFAR10
 
 import core.data.transforms as T
 from core.data.custom_dataset import ImageDataset
@@ -26,7 +27,14 @@ class BaseLoader:
 
 class Cifar10Loader(BaseLoader):
     def __call__(self, *args, **kwargs):
-        pass
+        cifar10_dataset = CIFAR10(root=self.cfg["Cifar10"]["root"],
+                                  train=True,
+                                  transform=self.transforms,
+                                  download=True)
+        classes = self.cfg["Cifar10"]["categories"]
+        num_classes = len(classes)
+        print("正在使用{}, 其中有{}个图像类别，分别为：{}".format(cifar10_dataset, num_classes, classes))
+        return classes, num_classes, DataLoader(cifar10_dataset, batch_size=self.batch_size, shuffle=True)
 
 
 class Cifar100Loader(BaseLoader):
