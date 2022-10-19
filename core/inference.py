@@ -17,11 +17,10 @@ class Classify:
             print("第{}张图片的类别是{}，预测概率为：{}".format(i, self.class_name[pred[i]], prob[i]))
 
     def process_image(self):
-        n = self.images.size(0)  # 图片数量
         with torch.no_grad():
-            pred = torch.nn.functional.softmax(self.model(self.images), dim=-1)
-            prob = torch.clone(pred)
-            pred = torch.argmax(pred, dim=-1)
+            pred_logits = self.model(self.images)
+            prob = torch.nn.functional.softmax(pred_logits, dim=1)
+            pred = torch.argmax(pred_logits, dim=1)
         if self.print_on:
             self._show_result([pred, prob])
         return pred, prob

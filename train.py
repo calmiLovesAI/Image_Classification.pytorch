@@ -21,7 +21,7 @@ def train_loop(cfg, model, dataloader, device):
     # 损失函数
     loss_fn = cross_entropy_loss()
     loss_mean = MeanMetric()
-    correct_mean = MeanMetric()    # 一个epoch的平均正确率
+    correct_mean = MeanMetric()  # 一个epoch的平均正确率
 
     for epoch in range(epochs):
         with tqdm(dataloader, desc="Epoch-{}/{}".format(epoch, epochs)) as pbar:
@@ -32,14 +32,11 @@ def train_loop(cfg, model, dataloader, device):
 
                 optimizer.zero_grad()
                 preds = model(images)
-
                 loss = loss_fn(preds, targets)
-                loss_mean.update(loss.item())
-
-                correct_mean.update((preds.argmax(1) == targets).type(torch.float).sum().item() / batch_size)
-
                 loss.backward()
                 optimizer.step()
+                loss_mean.update(loss.item())
+                correct_mean.update((preds.argmax(1) == targets).type(torch.float).sum().item() / batch_size)
 
                 pbar.set_postfix({"loss": "{}".format(loss_mean.result()),
                                   "accuracy": "{:.4f}%".format(100 * correct_mean.result())})
