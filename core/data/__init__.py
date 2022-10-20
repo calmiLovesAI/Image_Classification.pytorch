@@ -14,4 +14,6 @@ def load_dataset(cfg):
     idx = int(input("它的序号为："))
     if idx < 0 or idx >= len(DATASETS):
         raise ValueError("输入序号<{}>非法".format(idx))
-    return DATASETS[idx](cfg).__call__()
+    dataset = DATASETS[idx](cfg)
+    print("你选择了{}数据集".format(dataset.name))
+    return dataset.name, *dataset.__call__()

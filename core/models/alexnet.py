@@ -5,7 +5,7 @@ import torch.nn as nn
 
 
 class AlexNet(nn.Module):
-    def __init__(self, cfg, num_classes):
+    def __init__(self, cfg):
         """
         URL: https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf
         @article{krizhevsky2017imagenet,
@@ -55,7 +55,7 @@ class AlexNet(nn.Module):
         self.drop1 = nn.Dropout(p=0.5)
         self.fc2 = nn.Linear(in_features=4096, out_features=4096)
         self.drop2 = nn.Dropout(p=0.5)
-        self.fc3 = nn.Linear(in_features=4096, out_features=num_classes)
+        self.fc3 = nn.Linear(in_features=4096, out_features=cfg["num_classes"])
 
     def forward(self, x):
         """

@@ -17,6 +17,7 @@ class BaseLoader:
             T.ToTensor(),
             T.Resize(size=self.input_size),
         ])
+        self.name = "Custom Dataset"
 
     def __call__(self, *args, **kwargs):
         dataset = ImageDataset(self.cfg["Custom"]["root"], transform=self.transforms, target_transform=None)
@@ -26,6 +27,10 @@ class BaseLoader:
 
 
 class Cifar10Loader(BaseLoader):
+    def __init__(self, cfg):
+        super(Cifar10Loader, self).__init__(cfg)
+        self.name = "cifar10"
+
     def __call__(self, *args, **kwargs):
         cifar10_dataset = CIFAR10(root=self.cfg["Cifar10"]["root"],
                                   train=True,
@@ -38,5 +43,9 @@ class Cifar10Loader(BaseLoader):
 
 
 class Cifar100Loader(BaseLoader):
+    def __init__(self, cfg):
+        super(Cifar100Loader, self).__init__(cfg)
+        self.name = "cifar100"
+
     def __call__(self, *args, **kwargs):
         pass

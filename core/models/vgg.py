@@ -5,7 +5,7 @@ import torch.nn as nn
 
 
 class BaseVGG(nn.Module):
-    def __init__(self, cfg, structure, num_classes, use_bn=True):
+    def __init__(self, cfg, structure, use_bn=True):
         """
         URL: https://arxiv.org/abs/1409.1556
         @article{simonyan2014very,
@@ -29,7 +29,7 @@ class BaseVGG(nn.Module):
             nn.Linear(4096, 4096),
             nn.ReLU(True),
             nn.Dropout(p=0.5),
-            nn.Linear(4096, num_classes),
+            nn.Linear(4096, cfg["num_classes"]),
         )
 
     def _make_layers(self, c_in, batch_norm=False):
@@ -57,10 +57,9 @@ class BaseVGG(nn.Module):
 
 
 class VGG11(BaseVGG):
-    def __init__(self, cfg, num_classes):
+    def __init__(self, cfg):
         super(VGG11, self).__init__(cfg,
                                     [64, "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
-                                    num_classes,
                                     True)
         self.model_name = "VGG11"
         default_shape = (224, 224)
@@ -72,10 +71,9 @@ class VGG11(BaseVGG):
 
 
 class VGG13(BaseVGG):
-    def __init__(self, cfg, num_classes):
+    def __init__(self, cfg):
         super(VGG13, self).__init__(cfg,
                                     [64, 64, "M", 128, 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
-                                    num_classes,
                                     True)
         self.model_name = "VGG13"
         default_shape = (224, 224)
@@ -87,11 +85,10 @@ class VGG13(BaseVGG):
 
 
 class VGG16(BaseVGG):
-    def __init__(self, cfg, num_classes):
+    def __init__(self, cfg):
         super(VGG16, self).__init__(cfg,
                                     [64, 64, "M", 128, 128, "M", 256, 256, 256, "M", 512, 512, 512, "M", 512, 512, 512,
                                      "M"],
-                                    num_classes,
                                     True)
         self.model_name = "VGG16"
         default_shape = (224, 224)
@@ -103,11 +100,10 @@ class VGG16(BaseVGG):
 
 
 class VGG19(BaseVGG):
-    def __init__(self, cfg, num_classes):
+    def __init__(self, cfg):
         super(VGG19, self).__init__(cfg,
                                     [64, 64, "M", 128, 128, "M", 256, 256, 256, 256, "M", 512, 512, 512, 512, "M", 512,
                                      512, 512, 512, "M"],
-                                    num_classes,
                                     True)
         self.model_name = "VGG19"
         default_shape = (224, 224)

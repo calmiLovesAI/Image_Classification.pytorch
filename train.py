@@ -44,10 +44,10 @@ def train_loop(cfg, model, dataloader, device):
         correct_mean.reset()
 
         if epoch % save_frequency == 0:
-            torch.save(model.state_dict(), Path(save_path).joinpath("{}_epoch-{}.pth".format(model.model_name, epoch)))
+            torch.save(model.state_dict(), Path(save_path).joinpath("{}_{}_epoch-{}.pth".format(model.model_name, cfg["dataset"], epoch)))
 
-    torch.save(model.state_dict(), Path(save_path).joinpath("{}_weights.pth".format(model.model_name)))
-    torch.save(model, Path(save_path).joinpath("{}_entire_model.pth".format(model.model_name)))
+    torch.save(model.state_dict(), Path(save_path).joinpath("{}_{}_weights.pth".format(model.model_name, cfg["dataset"])))
+    torch.save(model, Path(save_path).joinpath("{}_{}_entire_model.pth".format(model.model_name, cfg["dataset"])))
 
 
 if __name__ == '__main__':
@@ -58,10 +58,12 @@ if __name__ == '__main__':
     print(cfg)
 
     # 加载数据集
-    classes, num_classes, train_dataloader = load_dataset(cfg)
+    dataset_name, classes, num_classes, train_dataloader = load_dataset(cfg)
+    cfg.update({"dataset": dataset_name})
+    cfg.update({"num_classes": num_classes})
 
     # 创建网络模型
-    model = select_model()(cfg, num_classes)
+    model = select_model()(cfg)
     model.to(device=device)
 
     train_loop(cfg, model, train_dataloader, device)
