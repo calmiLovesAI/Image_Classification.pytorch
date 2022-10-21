@@ -35,13 +35,12 @@ class ImageDataset(Dataset):
             # 单独某一类别的数据
             class_set = []
             self.classes.append(folder.name)
-            class_dir = Path(self.images_root).joinpath(folder)
-            for img_dir in class_dir.glob("*.*"):
+            for img_dir in folder.glob("*.*"):
                 class_set.append([str(img_dir), folder.name])
             # 属于个类别的图片数量
             num_images = len(class_set)
-            train_set.append(*class_set[:int(train_ratio * num_images)])
-            test_set.append(*class_set[int(train_ratio * num_images):])
+            train_set.extend(class_set[:int(train_ratio * num_images)])
+            test_set.extend(class_set[int(train_ratio * num_images):])
         return train_set, test_set
 
     def __len__(self):

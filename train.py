@@ -14,6 +14,9 @@ from evaluate import evaluate_loop
 def train_loop(cfg, model, train_loader, test_loader, device):
     model.train()     # 切换为训练模式
     print("Pytorch version: {}, Train on {}".format(torch.__version__, device))
+    print("训练参数如下：")
+    for k, v in cfg["Train"].items():
+        print(f"{k} : {v}")
     # 训练轮数
     epochs = cfg["Train"]["epochs"]
     save_frequency = cfg["Train"]["save_frequency"]
