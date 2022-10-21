@@ -1,5 +1,5 @@
 from torch.utils.data import DataLoader
-from torchvision.datasets import CIFAR10
+from torchvision.datasets import CIFAR10, CIFAR100
 
 import core.data.transforms as T
 from core.data.custom_dataset import ImageDataset
@@ -26,7 +26,7 @@ class BaseLoader:
         classes, num_classes = train_data.get_classes()
         print("正在使用{}, 其中有{}个图像类别，分别为：{}".format(self.cfg["Custom"]["root"], num_classes, classes))
         train_dataloader = DataLoader(train_data, batch_size=self.batch_size, shuffle=True)
-        test_dataloader = DataLoader(train_data, batch_size=self.batch_size, shuffle=False)
+        test_dataloader = DataLoader(test_data, batch_size=self.batch_size, shuffle=False)
         return classes, num_classes, train_dataloader, test_dataloader
 
 
@@ -59,4 +59,18 @@ class Cifar100Loader(BaseLoader):
         self.name = "cifar100"
 
     def __call__(self, *args, **kwargs):
-        pass
+        cifar100_train = CIFAR100(root=self.cfg["Cifar100"]["root"],
+                                train=True,
+                                transform=self.transforms,
+                                download=True)
+        cifar100_test = CIFAR100(root=self.cfg["Cifar100"]["root"],
+                               train=False,
+                               transform=self.transforms,
+                               download=True)
+        classes = self.cfg["Cifar100"]["categories"]
+        num_classes = 100
+        print("正在使用{}和{}".format(cifar100_train, cifar100_test))
+        print("其中有{}个类别，分别是：{}等".format(num_classes, classes))
+        train_dataloader = DataLoader(cifar100_train, batch_size=self.batch_size, shuffle=True)
+        test_dataloader = DataLoader(cifar100_test, batch_size=self.batch_size, shuffle=False)
+        return classes, num_classes, train_dataloader, test_dataloader
