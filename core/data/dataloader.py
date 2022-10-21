@@ -21,10 +21,13 @@ class BaseLoader:
         self.name = "Custom Dataset"
 
     def __call__(self, *args, **kwargs):
-        dataset = ImageDataset(self.cfg["Custom"]["root"], transform=self.transforms, target_transform=None)
-        classes, num_classes = dataset.get_classes()
-        print("正在使用{}, 其中有{}个图像类别，分别为：{}".format(dataset, num_classes, classes))
-        return classes, num_classes, DataLoader(dataset, batch_size=self.batch_size, shuffle=True)
+        train_data = ImageDataset(self.cfg["Custom"]["root"], train=True, transform=self.transforms, target_transform=None)
+        test_data = ImageDataset(self.cfg["Custom"]["root"], train=False, transform=self.transforms, target_transform=None)
+        classes, num_classes = train_data.get_classes()
+        print("正在使用{}, 其中有{}个图像类别，分别为：{}".format(self.name, num_classes, classes))
+        train_dataloader = DataLoader(train_data, batch_size=self.batch_size, shuffle=True)
+        test_dataloader = DataLoader(train_data, batch_size=self.batch_size, shuffle=False)
+        return classes, num_classes, train_dataloader, test_dataloader
 
 
 class Cifar10Loader(BaseLoader):
