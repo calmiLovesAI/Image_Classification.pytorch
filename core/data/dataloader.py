@@ -9,6 +9,7 @@ class BaseLoader:
     """
     适用于自定义数据集
     """
+
     def __init__(self, cfg):
         self.cfg = cfg
         self.batch_size = cfg["Train"]["batch_size"]
@@ -32,14 +33,21 @@ class Cifar10Loader(BaseLoader):
         self.name = "cifar10"
 
     def __call__(self, *args, **kwargs):
-        cifar10_dataset = CIFAR10(root=self.cfg["Cifar10"]["root"],
-                                  train=True,
-                                  transform=self.transforms,
-                                  download=True)
+        cifar10_train = CIFAR10(root=self.cfg["Cifar10"]["root"],
+                                train=True,
+                                transform=self.transforms,
+                                download=True)
+        cifar10_test = CIFAR10(root=self.cfg["Cifar10"]["root"],
+                               train=False,
+                               transform=self.transforms,
+                               download=True)
         classes = self.cfg["Cifar10"]["categories"]
         num_classes = len(classes)
-        print("正在使用{}, 其中有{}个图像类别，分别为：{}".format(cifar10_dataset, num_classes, classes))
-        return classes, num_classes, DataLoader(cifar10_dataset, batch_size=self.batch_size, shuffle=True)
+        print("正在使用{}和{}".format(cifar10_train, cifar10_test))
+        print("其中有{}个类别，分别是：{}".format(num_classes, classes))
+        train_dataloader = DataLoader(cifar10_train, batch_size=self.batch_size, shuffle=True)
+        test_dataloader = DataLoader(cifar10_test, batch_size=self.batch_size, shuffle=False)
+        return classes, num_classes, train_dataloader, test_dataloader
 
 
 class Cifar100Loader(BaseLoader):

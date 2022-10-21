@@ -14,7 +14,7 @@ if __name__ == '__main__':
     print(cfg)
 
     # 加载数据集
-    _, classes, num_classes, train_dataloader = load_dataset(cfg)
+    _, classes, num_classes, _, _ = load_dataset(cfg)
     cfg.update({"num_classes": num_classes})
 
     # 创建网络模型

@@ -8,9 +8,11 @@ from core.loss import cross_entropy_loss
 from core.metrics import MeanMetric
 from core.models import select_model
 from core.parse_yaml import Yaml
+from evaluate import evaluate_loop
 
 
-def train_loop(cfg, model, dataloader, device):
+def train_loop(cfg, model, train_loader, test_loader, device):
+    model.train()     # 切换为训练模式
     print("Pytorch version: {}, Train on {}".format(torch.__version__, device))
     # 训练轮数
     epochs = cfg["Train"]["epochs"]
@@ -24,7 +26,7 @@ def train_loop(cfg, model, dataloader, device):
     correct_mean = MeanMetric()  # 一个epoch的平均正确率
 
     for epoch in range(epochs):
-        with tqdm(dataloader, desc="Epoch-{}/{}".format(epoch, epochs)) as pbar:
+        with tqdm(train_loader, desc="Epoch-{}/{}".format(epoch, epochs)) as pbar:
             for i, (images, targets) in enumerate(pbar):
                 batch_size = images.size(0)
                 images = images.to(device)
@@ -43,10 +45,15 @@ def train_loop(cfg, model, dataloader, device):
         loss_mean.reset()
         correct_mean.reset()
 
-        if epoch % save_frequency == 0:
-            torch.save(model.state_dict(), Path(save_path).joinpath("{}_{}_epoch-{}.pth".format(model.model_name, cfg["dataset"], epoch)))
+        # evaluate
+        evaluate_loop(model, test_loader, device)
 
-    torch.save(model.state_dict(), Path(save_path).joinpath("{}_{}_weights.pth".format(model.model_name, cfg["dataset"])))
+        if epoch % save_frequency == 0:
+            torch.save(model.state_dict(),
+                       Path(save_path).joinpath("{}_{}_epoch-{}.pth".format(model.model_name, cfg["dataset"], epoch)))
+
+    torch.save(model.state_dict(),
+               Path(save_path).joinpath("{}_{}_weights.pth".format(model.model_name, cfg["dataset"])))
     torch.save(model, Path(save_path).joinpath("{}_{}_entire_model.pth".format(model.model_name, cfg["dataset"])))
 
 
@@ -58,7 +65,7 @@ if __name__ == '__main__':
     print(cfg)
 
     # 加载数据集
-    dataset_name, classes, num_classes, train_dataloader = load_dataset(cfg)
+    dataset_name, classes, num_classes, train_dataloader, test_dataloader = load_dataset(cfg)
     cfg.update({"dataset": dataset_name})
     cfg.update({"num_classes": num_classes})
 
@@ -66,4 +73,4 @@ if __name__ == '__main__':
     model = select_model()(cfg)
     model.to(device=device)
 
-    train_loop(cfg, model, train_dataloader, device)
+    train_loop(cfg, model, train_dataloader, test_dataloader, device)
