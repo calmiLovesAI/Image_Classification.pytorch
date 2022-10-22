@@ -18,9 +18,11 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     for k, v in cfg["Train"].items():
         print(f"{k} : {v}")
     # 训练轮数
+    start_epoch = cfg["Train"]["start_epoch"]
     epochs = cfg["Train"]["epochs"]
     save_frequency = cfg["Train"]["save_frequency"]
     save_path = cfg["Train"]["save_path"]
+    load_weights = cfg["Train"]["load_weights"]
     # 优化器
     optimizer = torch.optim.Adam(params=model.parameters(), lr=cfg["Train"]["learning_rate"])
     # 损失函数
@@ -28,7 +30,13 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     loss_mean = MeanMetric()
     correct_mean = MeanMetric()  # 一个epoch的平均正确率
 
-    for epoch in range(epochs):
+    if load_weights != "None":
+        print(f"加载权重文件{load_weights}成功！")
+        model.load_state_dict(torch.load(load_weights, map_location=device))
+    else:
+        start_epoch = 0
+
+    for epoch in range(start_epoch, epochs):
         with tqdm(train_loader, desc="Epoch-{}/{}".format(epoch, epochs)) as pbar:
             for i, (images, targets) in enumerate(pbar):
                 batch_size = images.size(0)
