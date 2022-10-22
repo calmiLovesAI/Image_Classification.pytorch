@@ -1,10 +1,21 @@
 from .alexnet import AlexNet
 from .vgg import VGG16, VGG19
+from .resnet import ResNet18, ResNet34, ResNet50, ResNet101, ResNet152, ResNet18Pretrained, ResNet34Pretrained, ResNet50Pretrained, ResNet101Pretrained, ResNet152Pretrained
 
 MODELS = {
     0: [AlexNet, "AlexNet"],
     1: [VGG16, "VGG16"],
-    2: [VGG19, "VGG19"]
+    2: [VGG19, "VGG19"],
+    3: [ResNet18, "ResNet18"],
+    4: [ResNet34, "ResNet34"],
+    5: [ResNet50, "ResNet50"],
+    6: [ResNet101, "ResNet101"],
+    7: [ResNet152, "ResNet152"],
+    8: [ResNet18Pretrained, "ResNet18Pretrained"],
+    9: [ResNet34Pretrained, "ResNet34Pretrained"],
+    10: [ResNet50Pretrained, "ResNet50Pretrained"],
+    11: [ResNet101Pretrained, "ResNet101Pretrained"],
+    12: [ResNet152Pretrained, "ResNet152Pretrained"]
 }
 
 

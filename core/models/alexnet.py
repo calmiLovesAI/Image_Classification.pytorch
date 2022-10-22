@@ -25,7 +25,9 @@ class AlexNet(nn.Module):
         c_in = cfg["Train"]["input_size"][0]
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
-            warnings.warn("你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name, default_shape))
+            warnings.warn(
+                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
+                                                                                   default_shape))
 
         self.conv1 = nn.Conv2d(in_channels=c_in, out_channels=96, kernel_size=11,
                                stride=4, padding=0)
@@ -63,18 +65,18 @@ class AlexNet(nn.Module):
         :param x: torch.Tensor, shape: [batch_size, 3, 227, 227]
         :return:
         """
-        x = self.bn1(self.conv1(x))   # (batch, 96, 55, 55)
-        x = self.pool1(x)             # (batch, 96, 27, 27)
+        x = self.bn1(self.conv1(x))  # (batch, 96, 55, 55)
+        x = self.pool1(x)  # (batch, 96, 27, 27)
 
-        x = self.bn2(self.conv2(x))   # (batch, 256, 27, 27)
-        x = self.pool2(x)             # (batch, 256, 13, 13)
+        x = self.bn2(self.conv2(x))  # (batch, 256, 27, 27)
+        x = self.pool2(x)  # (batch, 256, 13, 13)
 
-        x = self.bn3(self.conv3(x))    # (batch, 384, 13, 13)
-        x = self.bn4(self.conv4(x))    # (batch, 384, 13, 13)
-        x = self.bn5(self.conv5(x))    # (batch, 256, 13, 13)
-        x = self.pool3(x)              # (batch, 256, 6, 6)
+        x = self.bn3(self.conv3(x))  # (batch, 384, 13, 13)
+        x = self.bn4(self.conv4(x))  # (batch, 384, 13, 13)
+        x = self.bn5(self.conv5(x))  # (batch, 256, 13, 13)
+        x = self.pool3(x)  # (batch, 256, 6, 6)
 
-        x = self.flatten(x)    # (batch, 9216)
+        x = self.flatten(x)  # (batch, 9216)
         x = self.fc1(x)
         x = self.drop1(x)
         x = self.fc2(x)
@@ -82,13 +84,3 @@ class AlexNet(nn.Module):
         x = self.fc3(x)
 
         return x
-
-
-
-if __name__ == '__main__':
-    sample_x = torch.rand(1, 3, 227, 227)     # N, C, H, W
-    model = AlexNet(num_classes=10)
-    y = model(sample_x)
-    print(y.size())
-    print(y)
-

@@ -21,8 +21,10 @@ class BaseLoader:
         self.name = "Custom Dataset"
 
     def __call__(self, *args, **kwargs):
-        train_data = ImageDataset(self.cfg["Custom"]["root"], train=True, transform=self.transforms, target_transform=None)
-        test_data = ImageDataset(self.cfg["Custom"]["root"], train=False, transform=self.transforms, target_transform=None)
+        train_data = ImageDataset(self.cfg["Custom"]["root"], train=True, transform=self.transforms,
+                                  target_transform=None)
+        test_data = ImageDataset(self.cfg["Custom"]["root"], train=False, transform=self.transforms,
+                                 target_transform=None)
         classes, num_classes = train_data.get_classes()
         print("正在使用{}, 其中有{}个图像类别，分别为：{}".format(self.cfg["Custom"]["root"], num_classes, classes))
         train_dataloader = DataLoader(train_data, batch_size=self.batch_size, shuffle=True)
@@ -60,13 +62,13 @@ class Cifar100Loader(BaseLoader):
 
     def __call__(self, *args, **kwargs):
         cifar100_train = CIFAR100(root=self.cfg["Cifar100"]["root"],
-                                train=True,
-                                transform=self.transforms,
-                                download=True)
+                                  train=True,
+                                  transform=self.transforms,
+                                  download=True)
         cifar100_test = CIFAR100(root=self.cfg["Cifar100"]["root"],
-                               train=False,
-                               transform=self.transforms,
-                               download=True)
+                                 train=False,
+                                 transform=self.transforms,
+                                 download=True)
         classes = self.cfg["Cifar100"]["categories"]
         num_classes = 100
         print("正在使用{}和{}".format(cifar100_train, cifar100_test))
