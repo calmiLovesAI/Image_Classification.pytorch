@@ -281,7 +281,7 @@ class ResNet18Pretrained(nn.Module):
             warnings.warn(
                 "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
                                                                                    default_shape))
-        self.model_ft = models.resnet18(pretrained=True)
+        self.model_ft = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
         num_ftrs = self.model_ft.fc.in_features
         self.model_ft.fc = nn.Linear(num_ftrs, cfg["num_classes"])
 
@@ -313,7 +313,7 @@ class ResNet34Pretrained(nn.Module):
             warnings.warn(
                 "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
                                                                                    default_shape))
-        self.model_ft = models.resnet34(pretrained=True)
+        self.model_ft = models.resnet34(weights=models.ResNet34_Weights.IMAGENET1K_V1)
         num_ftrs = self.model_ft.fc.in_features
         self.model_ft.fc = nn.Linear(num_ftrs, cfg["num_classes"])
 
@@ -345,7 +345,7 @@ class ResNet50Pretrained(nn.Module):
             warnings.warn(
                 "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
                                                                                    default_shape))
-        self.model_ft = models.resnet50(pretrained=True)
+        self.model_ft = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V2)
         num_ftrs = self.model_ft.fc.in_features
         self.model_ft.fc = nn.Linear(num_ftrs, cfg["num_classes"])
 
@@ -377,7 +377,7 @@ class ResNet101Pretrained(nn.Module):
             warnings.warn(
                 "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
                                                                                    default_shape))
-        self.model_ft = models.resnet101(pretrained=True)
+        self.model_ft = models.resnet101(weights=models.ResNet101_Weights.IMAGENET1K_V2)
         num_ftrs = self.model_ft.fc.in_features
         self.model_ft.fc = nn.Linear(num_ftrs, cfg["num_classes"])
 
@@ -409,7 +409,7 @@ class ResNet152Pretrained(nn.Module):
             warnings.warn(
                 "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
                                                                                    default_shape))
-        self.model_ft = models.resnet152(pretrained=True)
+        self.model_ft = models.resnet152(weights=models.ResNet152_Weights.IMAGENET1K_V2)
         num_ftrs = self.model_ft.fc.in_features
         self.model_ft.fc = nn.Linear(num_ftrs, cfg["num_classes"])
 
