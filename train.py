@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import torch
+from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
 from core.data import load_dataset
@@ -12,7 +13,6 @@ from evaluate import evaluate_loop
 
 
 def train_loop(cfg, model, train_loader, test_loader, device):
-    model.train()     # 切换为训练模式
     print("Pytorch version: {}, Train on {}".format(torch.__version__, device))
     print("训练参数如下：")
     for k, v in cfg["Train"].items():
@@ -23,6 +23,9 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     save_frequency = cfg["Train"]["save_frequency"]
     save_path = cfg["Train"]["save_path"]
     load_weights = cfg["Train"]["load_weights"]
+    tensorboard_on = cfg["Train"]["tensorboard_on"]
+    input_size = cfg["Train"]["input_size"]
+    batch_size = cfg["Train"]["batch_size"]
     # 优化器
     optimizer = torch.optim.Adam(params=model.parameters(), lr=cfg["Train"]["learning_rate"])
     # 损失函数
@@ -36,7 +39,13 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     else:
         start_epoch = 0
 
+    if tensorboard_on:
+        # 在控制台使用命令 tensorboard --logdir=runs 进入tensorboard面板
+        writer = SummaryWriter()
+        writer.add_graph(model, torch.randn(batch_size, *input_size, dtype=torch.float32, device=device))
+
     for epoch in range(start_epoch, epochs):
+        model.train()  # 切换为训练模式
         with tqdm(train_loader, desc="Epoch-{}/{}".format(epoch, epochs)) as pbar:
             for i, (images, targets) in enumerate(pbar):
                 batch_size = images.size(0)
@@ -51,17 +60,26 @@ def train_loop(cfg, model, train_loader, test_loader, device):
                 loss_mean.update(loss.item())
                 correct_mean.update((preds.argmax(1) == targets).type(torch.float).sum().item() / batch_size)
 
+                if tensorboard_on:
+                    writer.add_scalar(tag="Loss", scalar_value=loss_mean.result(),
+                                      global_step=epoch * len(train_loader) + i)
+                    writer.add_scalar(tag="Accuracy", scalar_value=correct_mean.result(),
+                                      global_step=epoch * len(train_loader) + i)
+
                 pbar.set_postfix({"loss": "{}".format(loss_mean.result()),
                                   "accuracy": "{:.4f}%".format(100 * correct_mean.result())})
         loss_mean.reset()
         correct_mean.reset()
 
-        # evaluate
+        # 验证
         evaluate_loop(model, test_loader, device)
 
         if epoch % save_frequency == 0:
             torch.save(model.state_dict(),
                        Path(save_path).joinpath("{}_{}_epoch-{}.pth".format(model.model_name, cfg["dataset"], epoch)))
+
+    if tensorboard_on:
+        writer.close()
 
     torch.save(model.state_dict(),
                Path(save_path).joinpath("{}_{}_weights.pth".format(model.model_name, cfg["dataset"])))
