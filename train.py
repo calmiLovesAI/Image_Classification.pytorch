@@ -33,7 +33,7 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     loss_mean = MeanMetric()
     correct_mean = MeanMetric()  # 一个epoch的平均正确率
 
-    if load_weights != "None":
+    if load_weights != "":
         print(f"加载权重文件{load_weights}成功！")
         model.load_state_dict(torch.load(load_weights, map_location=device))
     else:
