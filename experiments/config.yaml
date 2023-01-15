@@ -8,6 +8,7 @@ Train:
     - 224
     - 224
   learning_rate: 0.0001
+  pretrained: true
   # 训练之前加载权重
   load_weights: None   # "None"或者权重文件的路径(str)
   # 模型保存频率
@@ -15,6 +16,7 @@ Train:
   # 保存路径
   save_path: "saves"
   tensorboard_on: true
+  add_graph: false
 Test:
   load_pth: ""
   test_pictures:

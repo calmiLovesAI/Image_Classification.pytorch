@@ -5,3 +5,4 @@ __pycache__
 /saves/*
 !/saves/README.md
 runs/
+web/

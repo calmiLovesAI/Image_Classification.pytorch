@@ -1,6 +1,7 @@
 from .alexnet import AlexNet
 from .vgg import VGG16, VGG19
 from .resnet import ResNet18, ResNet34, ResNet50, ResNet101, ResNet152, ResNet18Pretrained, ResNet34Pretrained, ResNet50Pretrained, ResNet101Pretrained, ResNet152Pretrained
+from .vit import ViT_B_16, ViT_B_32
 
 MODELS = {
     0: [AlexNet, "AlexNet"],
@@ -15,7 +16,9 @@ MODELS = {
     9: [ResNet34Pretrained, "ResNet34Pretrained"],
     10: [ResNet50Pretrained, "ResNet50Pretrained"],
     11: [ResNet101Pretrained, "ResNet101Pretrained"],
-    12: [ResNet152Pretrained, "ResNet152Pretrained"]
+    12: [ResNet152Pretrained, "ResNet152Pretrained"],
+    13: [ViT_B_16, "ViT_B_16"],
+    14: [ViT_B_32, "ViT_B_32"]
 }
 
 

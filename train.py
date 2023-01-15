@@ -24,6 +24,7 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     save_path = cfg["Train"]["save_path"]
     load_weights = cfg["Train"]["load_weights"]
     tensorboard_on = cfg["Train"]["tensorboard_on"]
+    add_graph = cfg["Train"]["add_graph"]
     input_size = cfg["Train"]["input_size"]
     batch_size = cfg["Train"]["batch_size"]
     # 优化器
@@ -33,16 +34,17 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     loss_mean = MeanMetric()
     correct_mean = MeanMetric()  # 一个epoch的平均正确率
 
-    if load_weights != "":
-        print(f"加载权重文件{load_weights}成功！")
-        model.load_state_dict(torch.load(load_weights, map_location=device))
-    else:
+    if load_weights == "" or "None":
         start_epoch = 0
+    else:
+        model.load_state_dict(torch.load(load_weights, map_location=device))
+        print(f"加载权重文件{load_weights}成功！")
 
     if tensorboard_on:
         # 在控制台使用命令 tensorboard --logdir=runs 进入tensorboard面板
         writer = SummaryWriter()
-        writer.add_graph(model, torch.randn(batch_size, *input_size, dtype=torch.float32, device=device))
+        if add_graph:
+            writer.add_graph(model, torch.randn(batch_size, *input_size, dtype=torch.float32, device=device))
 
     for epoch in range(start_epoch, epochs):
         model.train()  # 切换为训练模式
@@ -97,6 +99,7 @@ if __name__ == '__main__':
     dataset_name, classes, num_classes, train_dataloader, test_dataloader = load_dataset(cfg)
     cfg.update({"dataset": dataset_name})
     cfg.update({"num_classes": num_classes})
+    cfg.update({"device": device})
 
     # 创建网络模型
     model = select_model()(cfg)

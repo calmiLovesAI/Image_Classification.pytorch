@@ -1,4 +1,5 @@
 import math
+import warnings
 from collections import OrderedDict
 from functools import partial
 from typing import Any, Callable, Dict, List, NamedTuple, Optional
@@ -6,6 +7,19 @@ from typing import Any, Callable, Dict, List, NamedTuple, Optional
 import torch
 import torch.nn as nn
 from torchvision.ops import Conv2dNormActivation, MLP
+
+from core.utils import load_state_dict_from_url
+
+
+__all__ = [
+    "ViT_B_16",
+    "ViT_B_32"
+]
+
+PRETRAINED_WEIGHTS = {
+    "ViT_B_16": "https://download.pytorch.org/models/vit_b_16-c867db91.pth",
+    "ViT_B_32": "https://download.pytorch.org/models/vit_b_32-d86f8d99.pth",
+}
 
 
 class ConvStemConfig(NamedTuple):
@@ -147,20 +161,20 @@ class VisionTransformer(nn.Module):
     }
     """
 
-    def __int__(self,
-                image_size: int,
-                patch_size: int,
-                num_layers: int,
-                num_heads: int,
-                hidden_dim: int,
-                mlp_dim: int,
-                dropout: float = 0.0,
-                attention_dropout: float = 0.0,
-                num_classes: int = 1000,
-                representation_size: Optional[int] = None,
-                norm_layer: Callable[..., torch.nn.Module] = partial(nn.LayerNorm, eps=1e-6),
-                conv_stem_configs: Optional[List[ConvStemConfig]] = None):
-        super().__int__()
+    def __init__(self,
+                 image_size: int,
+                 patch_size: int,
+                 num_layers: int,
+                 num_heads: int,
+                 hidden_dim: int,
+                 mlp_dim: int,
+                 dropout: float = 0.0,
+                 attention_dropout: float = 0.0,
+                 num_classes: int = 1000,
+                 representation_size: Optional[int] = None,
+                 norm_layer: Callable[..., torch.nn.Module] = partial(nn.LayerNorm, eps=1e-6),
+                 conv_stem_configs: Optional[List[ConvStemConfig]] = None):
+        super().__init__()
         assert image_size % patch_size == 0, "Input shape indivisible by patch size!"
         self.image_size = image_size
         self.patch_size = patch_size
@@ -259,7 +273,7 @@ class VisionTransformer(nn.Module):
         # (n, c, h, w) -> (n, hidden_dim, n_h, n_w)
         x = self.conv_proj(x)
         # (n, hidden_dim, n_h, n_w) -> (n, hidden_dim, (n_h * n_w))
-        x = x.reshape(n, self.hidden_dim, n_h*n_w)
+        x = x.reshape(n, self.hidden_dim, n_h * n_w)
 
         # (n, hidden_dim, (n_h * n_w)) -> (n, (n_h * n_w), hidden_dim)
         # The self attention layer expects inputs in the format (N, S, E)
@@ -284,3 +298,55 @@ class VisionTransformer(nn.Module):
         x = self.heads(x)
 
         return x
+
+
+class ViT_B_16(VisionTransformer):
+    def __init__(self, cfg):
+        super().__init__(image_size=224,
+                         patch_size=16,
+                         num_layers=12,
+                         num_heads=12,
+                         hidden_dim=768,
+                         mlp_dim=3072
+                         )
+        default_shape = (224, 224)
+        input_shape = tuple(cfg["Train"]["input_size"][1:])
+        if input_shape != default_shape:
+            warnings.warn(
+                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
+                                                                                   default_shape))
+        if cfg["Train"]["pretrained"]:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=PRETRAINED_WEIGHTS["ViT_B_16"],
+                                                  model_dir="web/vit_b_16_ImageNet1K.pth",
+                                                  map_location=cfg["device"])
+            self.load_state_dict(state_dict)
+            print("Successfully loaded state dict!")
+            # 修改最后一层的结构
+            self.heads = nn.Linear(768, cfg["num_classes"])
+
+
+class ViT_B_32(VisionTransformer):
+    def __init__(self, cfg):
+        super().__init__(image_size=224,
+                         patch_size=32,
+                         num_layers=12,
+                         num_heads=12,
+                         hidden_dim=768,
+                         mlp_dim=3072
+                         )
+        default_shape = (224, 224)
+        input_shape = tuple(cfg["Train"]["input_size"][1:])
+        if input_shape != default_shape:
+            warnings.warn(
+                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
+                                                                                   default_shape))
+        if cfg["Train"]["pretrained"]:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=PRETRAINED_WEIGHTS["ViT_B_32"],
+                                                  model_dir="web/vit_b_32_ImageNet1K.pth",
+                                                  map_location=cfg["device"])
+            self.load_state_dict(state_dict)
+            print("Successfully loaded state dict!")
+            # 修改最后一层的结构
+            self.heads = nn.Linear(768, cfg["num_classes"])
