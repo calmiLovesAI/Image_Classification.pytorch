@@ -272,9 +272,11 @@ class ResNet(nn.Module):
 
 
 class ResNet18Pretrained(nn.Module):
+    model_name = "ResNet18Pretrained"
+
     def __init__(self, cfg):
         super(ResNet18Pretrained, self).__init__()
-        self.model_name = "ResNet18Pretrained"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -290,11 +292,13 @@ class ResNet18Pretrained(nn.Module):
 
 
 class ResNet18(ResNet):
+    model_name = "ResNet18"
+
     def __init__(self, cfg):
         super(ResNet18, self).__init__(BasicBlock,
                                        [2, 2, 2, 2],
                                        cfg["num_classes"])
-        self.model_name = "ResNet18"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -304,9 +308,11 @@ class ResNet18(ResNet):
 
 
 class ResNet34Pretrained(nn.Module):
+    model_name = "ResNet34Pretrained"
+
     def __init__(self, cfg):
         super(ResNet34Pretrained, self).__init__()
-        self.model_name = "ResNet34Pretrained"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -322,11 +328,13 @@ class ResNet34Pretrained(nn.Module):
 
 
 class ResNet34(ResNet):
+    model_name = "ResNet34"
+
     def __init__(self, cfg):
         super(ResNet34, self).__init__(BasicBlock,
                                        [3, 4, 6, 3],
                                        cfg["num_classes"])
-        self.model_name = "ResNet34"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -336,9 +344,11 @@ class ResNet34(ResNet):
 
 
 class ResNet50Pretrained(nn.Module):
+    model_name = "ResNet50Pretrained"
+
     def __init__(self, cfg):
         super(ResNet50Pretrained, self).__init__()
-        self.model_name = "ResNet50Pretrained"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -354,11 +364,13 @@ class ResNet50Pretrained(nn.Module):
 
 
 class ResNet50(ResNet):
+    model_name = "ResNet50"
+
     def __init__(self, cfg):
         super(ResNet50, self).__init__(Bottleneck,
                                        [3, 4, 6, 3],
                                        cfg["num_classes"])
-        self.model_name = "ResNet18"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -368,9 +380,11 @@ class ResNet50(ResNet):
 
 
 class ResNet101Pretrained(nn.Module):
+    model_name = "ResNet101Pretrained"
+
     def __init__(self, cfg):
         super(ResNet101Pretrained, self).__init__()
-        self.model_name = "ResNet101Pretrained"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -386,11 +400,13 @@ class ResNet101Pretrained(nn.Module):
 
 
 class ResNet101(ResNet):
+    model_name = "ResNet101"
+
     def __init__(self, cfg):
         super(ResNet101, self).__init__(Bottleneck,
                                         [3, 4, 23, 3],
                                         cfg["num_classes"])
-        self.model_name = "ResNet101"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -400,9 +416,11 @@ class ResNet101(ResNet):
 
 
 class ResNet152Pretrained(nn.Module):
+    model_name = "ResNet152Pretrained"
+
     def __init__(self, cfg):
         super(ResNet152Pretrained, self).__init__()
-        self.model_name = "ResNet152Pretrained"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -418,11 +436,13 @@ class ResNet152Pretrained(nn.Module):
 
 
 class ResNet152(ResNet):
+    model_name = "ResNet152"
+
     def __init__(self, cfg):
         super(ResNet152, self).__init__(Bottleneck,
                                         [3, 8, 36, 3],
                                         cfg["num_classes"])
-        self.model_name = "ResNet152"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:

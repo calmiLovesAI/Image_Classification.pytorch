@@ -5,6 +5,8 @@ import torch.nn as nn
 
 
 class AlexNet(nn.Module):
+    model_name = "AlexNet"
+
     def __init__(self, cfg):
         """
         URL: https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf
@@ -20,7 +22,6 @@ class AlexNet(nn.Module):
         }
         """
         super(AlexNet, self).__init__()
-        self.model_name = "AlexNet"
         default_shape = (227, 227)
         c_in = cfg["Train"]["input_size"][0]
         input_shape = tuple(cfg["Train"]["input_size"][1:])

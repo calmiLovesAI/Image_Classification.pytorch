@@ -10,7 +10,6 @@ from torchvision.ops import Conv2dNormActivation, MLP
 
 from core.utils import load_state_dict_from_url
 
-
 __all__ = [
     "ViT_B_16",
     "ViT_B_32"
@@ -301,6 +300,8 @@ class VisionTransformer(nn.Module):
 
 
 class ViT_B_16(VisionTransformer):
+    model_name = "ViT_B_16"
+
     def __init__(self, cfg):
         super().__init__(image_size=224,
                          patch_size=16,
@@ -327,6 +328,8 @@ class ViT_B_16(VisionTransformer):
 
 
 class ViT_B_32(VisionTransformer):
+    model_name = "ViT_B_32"
+
     def __init__(self, cfg):
         super().__init__(image_size=224,
                          patch_size=32,
@@ -335,6 +338,7 @@ class ViT_B_32(VisionTransformer):
                          hidden_dim=768,
                          mlp_dim=3072
                          )
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:

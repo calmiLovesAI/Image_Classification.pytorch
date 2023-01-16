@@ -16,6 +16,7 @@ if __name__ == '__main__':
     # 加载数据集
     _, classes, num_classes, _, _ = load_dataset(cfg)
     cfg.update({"num_classes": num_classes})
+    cfg.update({"device": device})
 
     # 创建网络模型
     model = select_model()(cfg)

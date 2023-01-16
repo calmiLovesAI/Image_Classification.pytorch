@@ -57,11 +57,13 @@ class BaseVGG(nn.Module):
 
 
 class VGG11(BaseVGG):
+    model_name = "VGG11"
+
     def __init__(self, cfg):
         super(VGG11, self).__init__(cfg,
                                     [64, "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
                                     True)
-        self.model_name = "VGG11"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -71,11 +73,13 @@ class VGG11(BaseVGG):
 
 
 class VGG13(BaseVGG):
+    model_name = "VGG13"
+
     def __init__(self, cfg):
         super(VGG13, self).__init__(cfg,
                                     [64, 64, "M", 128, 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
                                     True)
-        self.model_name = "VGG13"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -85,12 +89,13 @@ class VGG13(BaseVGG):
 
 
 class VGG16(BaseVGG):
+    model_name = "VGG16"
+
     def __init__(self, cfg):
         super(VGG16, self).__init__(cfg,
                                     [64, 64, "M", 128, 128, "M", 256, 256, 256, "M", 512, 512, 512, "M", 512, 512, 512,
                                      "M"],
                                     True)
-        self.model_name = "VGG16"
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -100,12 +105,14 @@ class VGG16(BaseVGG):
 
 
 class VGG19(BaseVGG):
+    model_name = "VGG19"
+
     def __init__(self, cfg):
         super(VGG19, self).__init__(cfg,
                                     [64, 64, "M", 128, 128, "M", 256, 256, 256, 256, "M", 512, 512, 512, 512, "M", 512,
                                      512, 512, 512, "M"],
                                     True)
-        self.model_name = "VGG19"
+
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
