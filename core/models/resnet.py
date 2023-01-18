@@ -6,6 +6,9 @@ from typing import Callable, List, Optional, Type, Union
 from torch import Tensor
 from torchvision import models
 
+from core.models.weights import ResNet_Weights
+from core.utils import load_state_dict_from_url
+
 
 def conv3x3(in_planes: int, out_planes: int, stride: int = 1, groups: int = 1, dilation: int = 1) -> nn.Conv2d:
     """3x3 convolution with padding"""
@@ -271,24 +274,24 @@ class ResNet(nn.Module):
         return self._forward_impl(x)
 
 
-class ResNet18Pretrained(nn.Module):
-    model_name = "ResNet18Pretrained"
-
-    def __init__(self, cfg):
-        super(ResNet18Pretrained, self).__init__()
-
-        default_shape = (224, 224)
-        input_shape = tuple(cfg["Train"]["input_size"][1:])
-        if input_shape != default_shape:
-            warnings.warn(
-                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
-                                                                                   default_shape))
-        self.model_ft = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
-        num_ftrs = self.model_ft.fc.in_features
-        self.model_ft.fc = nn.Linear(num_ftrs, cfg["num_classes"])
-
-    def forward(self, x):
-        return self.model_ft(x)
+# class ResNet18Pretrained(nn.Module):
+#     model_name = "ResNet18Pretrained"
+#
+#     def __init__(self, cfg):
+#         super(ResNet18Pretrained, self).__init__()
+#
+#         default_shape = (224, 224)
+#         input_shape = tuple(cfg["Train"]["input_size"][1:])
+#         if input_shape != default_shape:
+#             warnings.warn(
+#                 "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
+#                                                                                    default_shape))
+#         self.model_ft = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
+#         num_ftrs = self.model_ft.fc.in_features
+#         self.model_ft.fc = nn.Linear(num_ftrs, cfg["num_classes"])
+#
+#     def forward(self, x):
+#         return self.model_ft(x)
 
 
 class ResNet18(ResNet):
@@ -296,9 +299,10 @@ class ResNet18(ResNet):
 
     def __init__(self, cfg):
         super(ResNet18, self).__init__(BasicBlock,
-                                       [2, 2, 2, 2],
-                                       cfg["num_classes"])
-
+                                       [2, 2, 2, 2])
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
@@ -306,25 +310,15 @@ class ResNet18(ResNet):
                 "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
                                                                                    default_shape))
 
-
-class ResNet34Pretrained(nn.Module):
-    model_name = "ResNet34Pretrained"
-
-    def __init__(self, cfg):
-        super(ResNet34Pretrained, self).__init__()
-
-        default_shape = (224, 224)
-        input_shape = tuple(cfg["Train"]["input_size"][1:])
-        if input_shape != default_shape:
-            warnings.warn(
-                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
-                                                                                   default_shape))
-        self.model_ft = models.resnet34(weights=models.ResNet34_Weights.IMAGENET1K_V1)
-        num_ftrs = self.model_ft.fc.in_features
-        self.model_ft.fc = nn.Linear(num_ftrs, cfg["num_classes"])
-
-    def forward(self, x):
-        return self.model_ft(x)
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=ResNet_Weights.resnet_18_weights_url,
+                                                  model_dir="web/resnet18_ImageNet1K.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded the state dict!")
+            # 修改最后一层的结构
+            self.fc = nn.Linear(512 * BasicBlock.expansion, num_classes)
 
 
 class ResNet34(ResNet):
@@ -332,35 +326,25 @@ class ResNet34(ResNet):
 
     def __init__(self, cfg):
         super(ResNet34, self).__init__(BasicBlock,
-                                       [3, 4, 6, 3],
-                                       cfg["num_classes"])
-
+                                       [3, 4, 6, 3])
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
             warnings.warn(
                 "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
                                                                                    default_shape))
-
-
-class ResNet50Pretrained(nn.Module):
-    model_name = "ResNet50Pretrained"
-
-    def __init__(self, cfg):
-        super(ResNet50Pretrained, self).__init__()
-
-        default_shape = (224, 224)
-        input_shape = tuple(cfg["Train"]["input_size"][1:])
-        if input_shape != default_shape:
-            warnings.warn(
-                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
-                                                                                   default_shape))
-        self.model_ft = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V2)
-        num_ftrs = self.model_ft.fc.in_features
-        self.model_ft.fc = nn.Linear(num_ftrs, cfg["num_classes"])
-
-    def forward(self, x):
-        return self.model_ft(x)
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=ResNet_Weights.resnet_34_weights_url,
+                                                  model_dir="web/resnet34_ImageNet1K.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded the state dict!")
+            # 修改最后一层的结构
+            self.fc = nn.Linear(512 * BasicBlock.expansion, num_classes)
 
 
 class ResNet50(ResNet):
@@ -368,35 +352,25 @@ class ResNet50(ResNet):
 
     def __init__(self, cfg):
         super(ResNet50, self).__init__(Bottleneck,
-                                       [3, 4, 6, 3],
-                                       cfg["num_classes"])
-
+                                       [3, 4, 6, 3])
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
             warnings.warn(
                 "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
                                                                                    default_shape))
-
-
-class ResNet101Pretrained(nn.Module):
-    model_name = "ResNet101Pretrained"
-
-    def __init__(self, cfg):
-        super(ResNet101Pretrained, self).__init__()
-
-        default_shape = (224, 224)
-        input_shape = tuple(cfg["Train"]["input_size"][1:])
-        if input_shape != default_shape:
-            warnings.warn(
-                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
-                                                                                   default_shape))
-        self.model_ft = models.resnet101(weights=models.ResNet101_Weights.IMAGENET1K_V2)
-        num_ftrs = self.model_ft.fc.in_features
-        self.model_ft.fc = nn.Linear(num_ftrs, cfg["num_classes"])
-
-    def forward(self, x):
-        return self.model_ft(x)
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=ResNet_Weights.resnet_50_weights_url,
+                                                  model_dir="web/resnet50_ImageNet1K.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded the state dict!")
+            # 修改最后一层的结构
+            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
 
 
 class ResNet101(ResNet):
@@ -404,35 +378,25 @@ class ResNet101(ResNet):
 
     def __init__(self, cfg):
         super(ResNet101, self).__init__(Bottleneck,
-                                        [3, 4, 23, 3],
-                                        cfg["num_classes"])
-
+                                        [3, 4, 23, 3])
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
             warnings.warn(
                 "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
                                                                                    default_shape))
-
-
-class ResNet152Pretrained(nn.Module):
-    model_name = "ResNet152Pretrained"
-
-    def __init__(self, cfg):
-        super(ResNet152Pretrained, self).__init__()
-
-        default_shape = (224, 224)
-        input_shape = tuple(cfg["Train"]["input_size"][1:])
-        if input_shape != default_shape:
-            warnings.warn(
-                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
-                                                                                   default_shape))
-        self.model_ft = models.resnet152(weights=models.ResNet152_Weights.IMAGENET1K_V2)
-        num_ftrs = self.model_ft.fc.in_features
-        self.model_ft.fc = nn.Linear(num_ftrs, cfg["num_classes"])
-
-    def forward(self, x):
-        return self.model_ft(x)
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=ResNet_Weights.resnet_101_weights_url,
+                                                  model_dir="web/resnet101_ImageNet1K.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded the state dict!")
+            # 修改最后一层的结构
+            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
 
 
 class ResNet152(ResNet):
@@ -440,12 +404,22 @@ class ResNet152(ResNet):
 
     def __init__(self, cfg):
         super(ResNet152, self).__init__(Bottleneck,
-                                        [3, 8, 36, 3],
-                                        cfg["num_classes"])
-
+                                        [3, 8, 36, 3])
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
         default_shape = (224, 224)
         input_shape = tuple(cfg["Train"]["input_size"][1:])
         if input_shape != default_shape:
             warnings.warn(
                 "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
                                                                                    default_shape))
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=ResNet_Weights.resnet_152_weights_url,
+                                                  model_dir="web/resnet152_ImageNet1K.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded the state dict!")
+            # 修改最后一层的结构
+            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)

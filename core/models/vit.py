@@ -321,7 +321,7 @@ class ViT_B_16(VisionTransformer):
                                                   model_dir="web/vit_b_16_ImageNet1K.pth",
                                                   map_location=cfg["device"])
             self.load_state_dict(state_dict)
-            print("Successfully loaded state dict!")
+            print("Successfully loaded the state dict!")
             # 修改最后一层的结构
             self.heads = nn.Linear(768, cfg["num_classes"])
 
@@ -350,7 +350,7 @@ class ViT_B_32(VisionTransformer):
                                                   model_dir="web/vit_b_32_ImageNet1K.pth",
                                                   map_location=cfg["device"])
             self.load_state_dict(state_dict)
-            print("Successfully loaded state dict!")
+            print("Successfully loaded the state dict!")
             # 修改最后一层的结构
             self.heads = nn.Linear(768, cfg["num_classes"])
 
@@ -381,7 +381,7 @@ class ViT_L_16(VisionTransformer):
                                                   model_dir="web/vit_l_16_ImageNet1K.pth",
                                                   map_location=device)
             self.load_state_dict(state_dict)
-            print("Successfully loaded state dict!")
+            print("Successfully loaded the state dict!")
             # 修改最后一层的结构
             self.heads = nn.Linear(1024, num_classes)
 
@@ -412,7 +412,7 @@ class ViT_L_32(VisionTransformer):
                                                   model_dir="web/vit_l_32_ImageNet1K.pth",
                                                   map_location=device)
             self.load_state_dict(state_dict)
-            print("Successfully loaded state dict!")
+            print("Successfully loaded the state dict!")
             # 修改最后一层的结构
             self.heads = nn.Linear(1024, num_classes)
 
@@ -443,6 +443,6 @@ class ViT_H_14(VisionTransformer):
                                                   model_dir="web/vit_h_14_ImageNet1K_SWAG_E2E_V1.pth",
                                                   map_location=device)
             self.load_state_dict(state_dict)
-            print("Successfully loaded state dict!")
+            print("Successfully loaded the state dict!")
             # 修改最后一层的结构
             self.heads = nn.Linear(1280, num_classes)

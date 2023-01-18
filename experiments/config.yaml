@@ -16,7 +16,6 @@ Train:
   # 保存路径
   save_path: "saves"
   tensorboard_on: true
-  add_graph: false
 Test:
   load_pth: ""
   test_pictures:
