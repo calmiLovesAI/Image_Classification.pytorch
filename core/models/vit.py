@@ -8,17 +8,16 @@ import torch
 import torch.nn as nn
 from torchvision.ops import Conv2dNormActivation, MLP
 
+from core.models.weights import ViT_Weights
 from core.utils import load_state_dict_from_url
 
 __all__ = [
     "ViT_B_16",
-    "ViT_B_32"
+    "ViT_B_32",
+    "ViT_L_16",
+    "ViT_L_32",
+    "ViT_H_14"
 ]
-
-PRETRAINED_WEIGHTS = {
-    "ViT_B_16": "https://download.pytorch.org/models/vit_b_16-c867db91.pth",
-    "ViT_B_32": "https://download.pytorch.org/models/vit_b_32-d86f8d99.pth",
-}
 
 
 class ConvStemConfig(NamedTuple):
@@ -318,7 +317,7 @@ class ViT_B_16(VisionTransformer):
                                                                                    default_shape))
         if cfg["Train"]["pretrained"]:
             # 加载预训练模型
-            state_dict = load_state_dict_from_url(url=PRETRAINED_WEIGHTS["ViT_B_16"],
+            state_dict = load_state_dict_from_url(url=ViT_Weights.vit_b_16_weights_url,
                                                   model_dir="web/vit_b_16_ImageNet1K.pth",
                                                   map_location=cfg["device"])
             self.load_state_dict(state_dict)
@@ -347,10 +346,103 @@ class ViT_B_32(VisionTransformer):
                                                                                    default_shape))
         if cfg["Train"]["pretrained"]:
             # 加载预训练模型
-            state_dict = load_state_dict_from_url(url=PRETRAINED_WEIGHTS["ViT_B_32"],
+            state_dict = load_state_dict_from_url(url=ViT_Weights.vit_b_32_weights_url,
                                                   model_dir="web/vit_b_32_ImageNet1K.pth",
                                                   map_location=cfg["device"])
             self.load_state_dict(state_dict)
             print("Successfully loaded state dict!")
             # 修改最后一层的结构
             self.heads = nn.Linear(768, cfg["num_classes"])
+
+
+class ViT_L_16(VisionTransformer):
+    model_name = "ViT_L_16"
+
+    def __init__(self, cfg):
+        super().__init__(image_size=224,
+                         patch_size=16,
+                         num_layers=24,
+                         num_heads=16,
+                         hidden_dim=1024,
+                         mlp_dim=4096
+                         )
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
+        default_shape = (224, 224)
+        input_shape = tuple(cfg["Train"]["input_size"][1:])
+        if input_shape != default_shape:
+            warnings.warn(
+                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
+                                                                                   default_shape))
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=ViT_Weights.vit_l_16_weights_url,
+                                                  model_dir="web/vit_l_16_ImageNet1K.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded state dict!")
+            # 修改最后一层的结构
+            self.heads = nn.Linear(1024, num_classes)
+
+
+class ViT_L_32(VisionTransformer):
+    model_name = "ViT_L_32"
+
+    def __init__(self, cfg):
+        super().__init__(image_size=224,
+                         patch_size=32,
+                         num_layers=24,
+                         num_heads=16,
+                         hidden_dim=1024,
+                         mlp_dim=4096
+                         )
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
+        default_shape = (224, 224)
+        input_shape = tuple(cfg["Train"]["input_size"][1:])
+        if input_shape != default_shape:
+            warnings.warn(
+                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
+                                                                                   default_shape))
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=ViT_Weights.vit_l_32_weights_url,
+                                                  model_dir="web/vit_l_32_ImageNet1K.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded state dict!")
+            # 修改最后一层的结构
+            self.heads = nn.Linear(1024, num_classes)
+
+
+class ViT_H_14(VisionTransformer):
+    model_name = "ViT_H_14"
+
+    def __init__(self, cfg):
+        super().__init__(image_size=518,
+                         patch_size=14,
+                         num_layers=32,
+                         num_heads=16,
+                         hidden_dim=1280,
+                         mlp_dim=5120
+                         )
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
+        default_shape = (518, 518)
+        input_shape = tuple(cfg["Train"]["input_size"][1:])
+        if input_shape != default_shape:
+            warnings.warn(
+                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
+                                                                                   default_shape))
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=ViT_Weights.vit_h_14_weights_url,
+                                                  model_dir="web/vit_h_14_ImageNet1K_SWAG_E2E_V1.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded state dict!")
+            # 修改最后一层的结构
+            self.heads = nn.Linear(1280, num_classes)
