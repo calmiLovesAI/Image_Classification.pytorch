@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 
 import torch
+import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
@@ -42,6 +43,7 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     tensorboard_on = cfg["Train"]["tensorboard_on"]
     input_size = cfg["Train"]["input_size"]
     batch_size = cfg["Train"]["batch_size"]
+    mixed_precision = cfg["Train"]["mixed_precision"]
     # 优化器
     optimizer = torch.optim.Adam(params=model.parameters(), lr=cfg["Train"]["learning_rate"])
     # 损失函数
@@ -63,6 +65,8 @@ def train_loop(cfg, model, train_loader, test_loader, device):
         except Exception:
             traceback.print_exc()
 
+    if mixed_precision:
+        scaler = torch.cuda.amp.GradScaler()
     for epoch in range(start_epoch, epochs):
         model.train()  # 切换为训练模式
         with tqdm(train_loader, desc="Epoch-{}/{}".format(epoch, epochs)) as pbar:
@@ -72,10 +76,19 @@ def train_loop(cfg, model, train_loader, test_loader, device):
                 targets = targets.to(device)
 
                 optimizer.zero_grad()
-                preds = model(images)
-                loss = loss_fn(preds, targets)
-                loss.backward()
-                optimizer.step()
+                if mixed_precision:
+                    with torch.cuda.amp.autocast():
+                        preds = model(images)
+                        loss = loss_fn(preds, targets)
+                    scaler.scale(loss).backward()
+                    scaler.step(optimizer)
+                    scaler.update()
+                else:
+                    preds = model(images)
+                    loss = loss_fn(preds, targets)
+                    loss.backward()
+                    optimizer.step()
+
                 loss_mean.update(loss.item())
                 correct_mean.update((preds.argmax(1) == targets).type(torch.float).sum().item() / batch_size)
 

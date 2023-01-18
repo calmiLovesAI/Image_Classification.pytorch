@@ -1,7 +1,7 @@
 Train:
   start_epoch: 0
   epochs: 50
-  batch_size: 8
+  batch_size: 16
   # 输入图片大小：(C, H, W)
   input_size:
     - 3
@@ -16,6 +16,7 @@ Train:
   # 保存路径
   save_path: "saves"
   tensorboard_on: true
+  mixed_precision: true
   log:
     root: "out"
     print_freq: 1
