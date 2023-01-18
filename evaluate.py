@@ -11,7 +11,8 @@ def evaluate_loop(model, dataloader, device):
     test_loss, correct = 0, 0
 
     with torch.no_grad():
-        for images, targets in dataloader:
+        for i, (images, targets) in enumerate(dataloader):
+            print(f"Progress: {(100 * (i + 1) / len(dataloader)):.0f}%", end="\r")
             images = images.to(device)
             targets = targets.to(device)
 
