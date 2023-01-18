@@ -16,6 +16,9 @@ Train:
   # 保存路径
   save_path: "saves"
   tensorboard_on: true
+  log:
+    root: "out"
+    print_freq: 1
 Test:
   load_pth: ""
   test_pictures:

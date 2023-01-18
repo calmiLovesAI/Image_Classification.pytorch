@@ -23,5 +23,5 @@ def evaluate_loop(model, dataloader, device):
     test_loss /= num_batches
     correct /= size
     print_info = f"Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f}"
-    print(f"Test Error: \n {print_info}")
+    print(f"Test: {print_info}")
     return print_info

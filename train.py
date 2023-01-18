@@ -18,9 +18,9 @@ from evaluate import evaluate_loop
 
 def train_loop(cfg, model, train_loader, test_loader, device):
     train_logger = logging.getLogger("TRAIN")
-    train_logger_file = os.path.join("out", get_format_filename(model_name=model.model_name,
-                                                                dataset_name=cfg["dataset"],
-                                                                addition=get_current_format_time() + ".log"))
+    train_logger_file = os.path.join(cfg["Train"]["log"]["root"], get_format_filename(model_name=model.model_name,
+                                                                                      dataset_name=cfg["dataset"],
+                                                                                      addition=get_current_format_time() + ".log"))
     auto_make_dirs(train_logger_file)
     handler = logging.FileHandler(filename=train_logger_file, encoding="utf-8")
     train_logger.setLevel(logging.INFO)
@@ -88,9 +88,12 @@ def train_loop(cfg, model, train_loader, test_loader, device):
                 pbar.set_postfix({"loss": "{}".format(loss_mean.result()),
                                   "accuracy": "{:.4f}%".format(100 * correct_mean.result())})
 
-                train_logger.info(msg="Epoch: {}/{}, step: {}/{}, Loss: {}, Accuracy: {:.4f}%".format(epoch, epochs,
-                                                                                                      i, len(train_loader),
-                                                                                                      loss_mean.result(), 100 * correct_mean.result()))
+                if i % cfg["Train"]["log"]["print_freq"] == 0:
+                    train_logger.info(msg="Epoch: {}/{}, step: {}/{}, Loss: {}, Accuracy: {:.4f}%".format(epoch, epochs,
+                                                                                                          i,
+                                                                                                          len(train_loader),
+                                                                                                          loss_mean.result(),
+                                                                                                          100 * correct_mean.result()))
 
         loss_mean.reset()
         correct_mean.reset()
