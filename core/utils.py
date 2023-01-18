@@ -1,4 +1,5 @@
 import os.path
+import time
 from typing import List
 
 import cv2
@@ -60,3 +61,17 @@ def download_file(url, model_dir):
 def load_state_dict_from_url(url, model_dir, map_location=None):
     download_file(url, model_dir)
     return torch.load(model_dir, map_location=map_location)
+
+
+def get_current_format_time():
+    return time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
+
+
+def get_format_filename(model_name: str, dataset_name: str, addition: str = None) -> str:
+    return model_name + "_" + dataset_name + "_" + addition
+
+
+def auto_make_dirs(file_path):
+    dir = os.path.dirname(file_path)
+    if not os.path.exists(dir):
+        os.makedirs(dir)

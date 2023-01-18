@@ -1,4 +1,6 @@
+import os.path
 import traceback
+import logging
 from pathlib import Path
 
 import torch
@@ -10,10 +12,23 @@ from core.loss import cross_entropy_loss
 from core.metrics import MeanMetric
 from core.models import select_model
 from core.parse_yaml import Yaml
+from core.utils import get_format_filename, get_current_format_time, auto_make_dirs
 from evaluate import evaluate_loop
 
 
 def train_loop(cfg, model, train_loader, test_loader, device):
+    train_logger = logging.getLogger("TRAIN")
+    train_logger_file = os.path.join("out", get_format_filename(model_name=model.model_name,
+                                                                dataset_name=cfg["dataset"],
+                                                                addition=get_current_format_time() + ".log"))
+    auto_make_dirs(train_logger_file)
+    handler = logging.FileHandler(filename=train_logger_file, encoding="utf-8")
+    train_logger.setLevel(logging.INFO)
+    handler.setLevel(logging.INFO)
+    formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s %(message)s")
+    handler.setFormatter(formatter)
+    train_logger.addHandler(handler)
+
     print("Pytorch version: {}, Train on {}".format(torch.__version__, device))
     print("训练参数如下：")
     for k, v in cfg["Train"].items():
@@ -72,11 +87,17 @@ def train_loop(cfg, model, train_loader, test_loader, device):
 
                 pbar.set_postfix({"loss": "{}".format(loss_mean.result()),
                                   "accuracy": "{:.4f}%".format(100 * correct_mean.result())})
+
+                train_logger.info(msg="Epoch: {}/{}, step: {}/{}, Loss: {}, Accuracy: {:.4f}%".format(epoch, epochs,
+                                                                                                      i, len(train_loader),
+                                                                                                      loss_mean.result(), 100 * correct_mean.result()))
+
         loss_mean.reset()
         correct_mean.reset()
 
         # 验证
-        evaluate_loop(model, test_loader, device)
+        evaluate_result = evaluate_loop(model, test_loader, device)
+        train_logger.info(msg=f"===========Evaluate after epoch-{epoch}============\n {evaluate_result}")
 
         if epoch % save_frequency == 0:
             torch.save(model.state_dict(),

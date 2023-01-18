@@ -6,3 +6,4 @@ __pycache__
 !/saves/README.md
 runs/
 web/
+out/
