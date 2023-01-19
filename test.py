@@ -1,5 +1,6 @@
 import torch
 
+from core.checkpoint import CheckPoint
 from core.data import load_dataset
 from core.models import select_model
 from core.parse_yaml import Yaml
@@ -20,7 +21,7 @@ if __name__ == '__main__':
 
     # 创建网络模型
     model = select_model()(cfg)
-    model.load_state_dict(torch.load(cfg["Test"]["load_pth"], map_location=device))
+    model, _, _ = CheckPoint.load(path=cfg["Test"]["load_pth"], device=device, model=model)
 
     test_pictures = cfg["Test"]["test_pictures"]
 

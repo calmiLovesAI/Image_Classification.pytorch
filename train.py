@@ -4,10 +4,10 @@ import logging
 from pathlib import Path
 
 import torch
-import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
+from core.checkpoint import CheckPoint
 from core.data import load_dataset
 from core.loss import cross_entropy_loss
 from core.metrics import MeanMetric
@@ -35,7 +35,7 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     for k, v in cfg["Train"].items():
         print(f"{k} : {v}")
     # 训练轮数
-    start_epoch = cfg["Train"]["start_epoch"]
+    # start_epoch = cfg["Train"]["start_epoch"]
     epochs = cfg["Train"]["epochs"]
     save_frequency = cfg["Train"]["save_frequency"]
     save_path = cfg["Train"]["save_path"]
@@ -51,11 +51,13 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     loss_mean = MeanMetric()
     correct_mean = MeanMetric()  # 一个epoch的平均正确率
 
-    if load_weights == "" or "None":
+    if load_weights == "":
         start_epoch = 0
     else:
-        model.load_state_dict(torch.load(load_weights, map_location=device))
-        print(f"加载权重文件{load_weights}成功！")
+        model, optimizer, start_epoch = CheckPoint.load(path=load_weights, device=device, model=model,
+                                                        optimizer=optimizer)
+        start_epoch += 1
+        print(f"加载权重文件{load_weights}成功！将从epoch-{start_epoch}处恢复训练")
 
     if tensorboard_on:
         # 在控制台使用命令 tensorboard --logdir=runs 进入tensorboard面板
@@ -116,14 +118,15 @@ def train_loop(cfg, model, train_loader, test_loader, device):
         train_logger.info(msg=f"===========Evaluate after epoch-{epoch}============\n {evaluate_result}")
 
         if epoch % save_frequency == 0:
-            torch.save(model.state_dict(),
-                       Path(save_path).joinpath("{}_{}_epoch-{}.pth".format(model.model_name, cfg["dataset"], epoch)))
+            CheckPoint.save(model, optimizer, epoch,
+                            path=Path(save_path).joinpath(
+                                "{}_{}_epoch-{}.pth".format(model.model_name, cfg["dataset"], epoch)))
 
     if tensorboard_on:
         writer.close()
 
-    torch.save(model.state_dict(),
-               Path(save_path).joinpath("{}_{}_weights.pth".format(model.model_name, cfg["dataset"])))
+    CheckPoint.save(model, optimizer, epochs,
+                    path=Path(save_path).joinpath("{}_{}_weights.pth".format(model.model_name, cfg["dataset"])))
     torch.save(model, Path(save_path).joinpath("{}_{}_entire_model.pth".format(model.model_name, cfg["dataset"])))
 
 

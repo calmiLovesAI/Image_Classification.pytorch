@@ -1,5 +1,4 @@
 Train:
-  start_epoch: 0
   epochs: 50
   batch_size: 16
   # 输入图片大小：(C, H, W)
@@ -10,16 +9,16 @@ Train:
   learning_rate: 0.0001
   pretrained: true
   # 训练之前加载权重
-  load_weights: None   # "None"或者权重文件的路径(str)
+  load_weights: ""   # ""或者权重文件的路径(str)
   # 模型保存频率
-  save_frequency: 5
+  save_frequency: 10
   # 保存路径
   save_path: "saves"
   tensorboard_on: true
   mixed_precision: true
   log:
     root: "out"
-    print_freq: 1
+    print_freq: 100
 Test:
   load_pth: ""
   test_pictures:
