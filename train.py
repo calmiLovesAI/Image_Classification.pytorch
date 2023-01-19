@@ -12,6 +12,7 @@ from core.data import load_dataset
 from core.loss import cross_entropy_loss
 from core.metrics import MeanMetric
 from core.models import select_model
+from core.optimizer import get_optimizer, get_lr_scheduler
 from core.parse_yaml import Yaml
 from core.utils import get_format_filename, get_current_format_time, auto_make_dirs
 from evaluate import evaluate_loop
@@ -35,7 +36,6 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     for k, v in cfg["Train"].items():
         print(f"{k} : {v}")
     # 训练轮数
-    # start_epoch = cfg["Train"]["start_epoch"]
     epochs = cfg["Train"]["epochs"]
     save_frequency = cfg["Train"]["save_frequency"]
     save_path = cfg["Train"]["save_path"]
@@ -45,17 +45,17 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     batch_size = cfg["Train"]["batch_size"]
     mixed_precision = cfg["Train"]["mixed_precision"]
     # 优化器
-    optimizer = torch.optim.Adam(params=model.parameters(), lr=cfg["Train"]["learning_rate"])
+    optimizer = get_optimizer(model, optimizer_cfg=cfg["Optimizer"])
+    scheduler = get_lr_scheduler(optimizer, scheduler_cfg=cfg["Scheduler"])
     # 损失函数
     loss_fn = cross_entropy_loss()
     loss_mean = MeanMetric()
     correct_mean = MeanMetric()  # 一个epoch的平均正确率
 
-    if load_weights == "":
-        start_epoch = 0
-    else:
-        model, optimizer, start_epoch = CheckPoint.load(path=load_weights, device=device, model=model,
-                                                        optimizer=optimizer)
+    start_epoch = 0
+    if load_weights != "":
+        model, optimizer, scheduler, start_epoch = CheckPoint.load(path=load_weights, device=device, model=model,
+                                                        optimizer=optimizer, scheduler=scheduler)
         start_epoch += 1
         print(f"加载权重文件{load_weights}成功！将从epoch-{start_epoch}处恢复训练")
 
@@ -71,6 +71,8 @@ def train_loop(cfg, model, train_loader, test_loader, device):
         scaler = torch.cuda.amp.GradScaler()
     for epoch in range(start_epoch, epochs):
         model.train()  # 切换为训练模式
+        loss_mean.reset()
+        correct_mean.reset()
         with tqdm(train_loader, desc="Epoch-{}/{}".format(epoch, epochs)) as pbar:
             for i, (images, targets) in enumerate(pbar):
                 batch_size = images.size(0)
@@ -110,22 +112,22 @@ def train_loop(cfg, model, train_loader, test_loader, device):
                                                                                                           loss_mean.result(),
                                                                                                           100 * correct_mean.result()))
 
-        loss_mean.reset()
-        correct_mean.reset()
+        if scheduler is not None:
+            scheduler.step()
 
         # 验证
         evaluate_result = evaluate_loop(model, test_loader, device)
         train_logger.info(msg=f"===========Evaluate after epoch-{epoch}============\n {evaluate_result}")
 
         if epoch % save_frequency == 0:
-            CheckPoint.save(model, optimizer, epoch,
+            CheckPoint.save(model, optimizer, scheduler, epoch,
                             path=Path(save_path).joinpath(
                                 "{}_{}_epoch-{}.pth".format(model.model_name, cfg["dataset"], epoch)))
 
     if tensorboard_on:
         writer.close()
 
-    CheckPoint.save(model, optimizer, epochs,
+    CheckPoint.save(model, optimizer, scheduler, epochs,
                     path=Path(save_path).joinpath("{}_{}_weights.pth".format(model.model_name, cfg["dataset"])))
     torch.save(model, Path(save_path).joinpath("{}_{}_entire_model.pth".format(model.model_name, cfg["dataset"])))
 
@@ -134,7 +136,9 @@ if __name__ == '__main__':
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # 读取配置文件
-    cfg = Yaml(yaml_filepath=["./experiments/config.yaml", "./experiments/data.yaml"]).parse()
+    cfg = Yaml(yaml_filepath=["./experiments/config.yaml",
+                              "./experiments/data.yaml",
+                              "./experiments/optimizer.yaml"]).parse()
     print(cfg)
 
     # 加载数据集

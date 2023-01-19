@@ -40,9 +40,7 @@ def read_image(image_paths: List[str], add_dim=False, convert_to_tensor=False, r
 
 
 def download_file(url, model_dir):
-    dir = os.path.dirname(model_dir)
-    if not os.path.exists(dir):
-        os.makedirs(dir)
+    auto_make_dirs(model_dir)
     if os.path.exists(model_dir):
         print(f"File '{model_dir}' already exists.")
     else:

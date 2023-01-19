@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     # 创建网络模型
     model = select_model()(cfg)
-    model, _, _ = CheckPoint.load(path=cfg["Test"]["load_pth"], device=device, model=model)
+    model, _, _, _ = CheckPoint.load(path=cfg["Test"]["load_pth"], device=device, model=model)
 
     test_pictures = cfg["Test"]["test_pictures"]
 
