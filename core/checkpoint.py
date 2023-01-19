@@ -4,12 +4,20 @@ import torch
 class CheckPoint:
     @staticmethod
     def save(model, optimizer, scheduler, epoch, path):
-        torch.save({
-            "model": model.state_dict(),
-            "optimizer": optimizer.state_dict(),
-            "epoch": epoch,
-            "scheduler": scheduler.state_dict()
-        }, path)
+        if scheduler is None:
+            torch.save({
+                "model": model.state_dict(),
+                "optimizer": optimizer.state_dict(),
+                "epoch": epoch,
+                "scheduler": "None"
+            }, path)
+        else:
+            torch.save({
+                "model": model.state_dict(),
+                "optimizer": optimizer.state_dict(),
+                "epoch": epoch,
+                "scheduler": scheduler.state_dict()
+            }, path)
 
     @staticmethod
     def load(path, device, model, optimizer=None, scheduler=None):

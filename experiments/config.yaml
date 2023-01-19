@@ -17,7 +17,7 @@ Train:
   mixed_precision: true
   log:
     root: "out"
-    print_freq: 100
+    print_freq: 50
 Test:
   load_pth: ""
   test_pictures:

@@ -15,7 +15,7 @@ Optimizer:
     momentum: 0
     weight_decay: 0
 Scheduler:
-  chosen_name: "MultiStepLR"   # ""表示不使用学习率下降策略
+  chosen_name: ""   # ""表示不使用学习率下降策略
   MultiStepLR:
     name: "MultiStepLR"
     milestones: [30, 40]
