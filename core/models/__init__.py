@@ -1,11 +1,12 @@
 from .alexnet import AlexNet
 from .vgg import VGG16, VGG19
-from .resnet import ResNet18, ResNet34, ResNet50, ResNet101, ResNet152
+from .resnet import ResNet18, ResNet34, ResNet50, ResNet101, ResNet152, ResNeXt50_32x4d, ResNeXt101_32x8d, ResNeXt101_64x4d
 from .vit import ViT_B_16, ViT_B_32, ViT_L_16, ViT_L_32, ViT_H_14
 
 
 MODELS = [AlexNet, VGG16, VGG19,
           ResNet18, ResNet34, ResNet50, ResNet101, ResNet152,
+          ResNeXt50_32x4d, ResNeXt101_32x8d, ResNeXt101_64x4d,
           ViT_B_16, ViT_B_32, ViT_L_16, ViT_L_32, ViT_H_14]
 
 MODELS_DICT = dict((k, v) for k, v in enumerate(MODELS))

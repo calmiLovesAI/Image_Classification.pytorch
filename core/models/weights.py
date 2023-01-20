@@ -12,3 +12,6 @@ class ResNet_Weights:
     resnet_50_weights_url = "https://download.pytorch.org/models/resnet50-11ad3fa6.pth"
     resnet_101_weights_url = "https://download.pytorch.org/models/resnet101-cd907fc2.pth"
     resnet_152_weights_url = "https://download.pytorch.org/models/resnet152-f82ba261.pth"
+    resnext_50_32x4d_weights_url = "https://download.pytorch.org/models/resnext50_32x4d-1a0047aa.pth"
+    resnext_101_32x8d_weights_url = "https://download.pytorch.org/models/resnext101_32x8d-110c445d.pth"
+    resnext_101_64x4d_weights_url = "https://download.pytorch.org/models/resnext101_64x4d-173b62eb.pth"
