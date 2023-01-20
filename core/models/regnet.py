@@ -1,18 +1,18 @@
 import math
 import warnings
 from collections import OrderedDict
-from functools import partial
-from types import FunctionType
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import torch
 import torch.nn as nn
-import torchvision
 from torch import Tensor
 from torchvision.ops import Conv2dNormActivation, SqueezeExcitation
 
 __all__ = [
     "RegNet_Y_400MF",
+    "RegNet_Y_800MF",
+    "RegNet_Y_8GF",
+    "RegNet_Y_128GF"
 ]
 
 from core.models.weights import RegNet_Weights
@@ -393,6 +393,96 @@ class RegNet_Y_400MF(RegNet):
             # 加载预训练模型
             state_dict = load_state_dict_from_url(url=RegNet_Weights.regnet_y_400mf_weights_url,
                                                   model_dir="web/regnet_y_400mf_ImageNet1K.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded the state dict!")
+            # 修改最后一层的结构
+            self.fc = nn.Linear(self.fc_channel_in, num_classes)
+
+
+class RegNet_Y_800MF(RegNet):
+    model_name = "RegNet_Y_800MF"
+
+    def __init__(self, cfg):
+        super().__init__(block_params=BlockParams.from_init_params(depth=14,
+                                                                   w_0=56,
+                                                                   w_a=38.84,
+                                                                   w_m=2.4,
+                                                                   group_width=16,
+                                                                   se_ratio=0.25))
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
+        default_shape = (224, 224)
+        input_shape = tuple(cfg["Train"]["input_size"][1:])
+        if input_shape != default_shape:
+            warnings.warn(
+                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
+                                                                                   default_shape))
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=RegNet_Weights.regnet_y_800mf_weights_url,
+                                                  model_dir="web/regnet_y_800mf_ImageNet1K.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded the state dict!")
+            # 修改最后一层的结构
+            self.fc = nn.Linear(self.fc_channel_in, num_classes)
+
+
+class RegNet_Y_8GF(RegNet):
+    model_name = "RegNet_Y_8GF"
+
+    def __init__(self, cfg):
+        super().__init__(block_params=BlockParams.from_init_params(depth=17,
+                                                                   w_0=192,
+                                                                   w_a=76.82,
+                                                                   w_m=2.19,
+                                                                   group_width=56,
+                                                                   se_ratio=0.25))
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
+        default_shape = (224, 224)
+        input_shape = tuple(cfg["Train"]["input_size"][1:])
+        if input_shape != default_shape:
+            warnings.warn(
+                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
+                                                                                   default_shape))
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=RegNet_Weights.regnet_y_8gf_weights_url,
+                                                  model_dir="web/regnet_y_8gf_ImageNet1K.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded the state dict!")
+            # 修改最后一层的结构
+            self.fc = nn.Linear(self.fc_channel_in, num_classes)
+
+
+class RegNet_Y_128GF(RegNet):
+    model_name = "RegNet_Y_128GF"
+
+    def __init__(self, cfg):
+        super().__init__(block_params=BlockParams.from_init_params(depth=27,
+                                                                   w_0=456,
+                                                                   w_a=160.83,
+                                                                   w_m=2.52,
+                                                                   group_width=264,
+                                                                   se_ratio=0.25))
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
+        default_shape = (384, 384)
+        input_shape = tuple(cfg["Train"]["input_size"][1:])
+        if input_shape != default_shape:
+            warnings.warn(
+                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
+                                                                                   default_shape))
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=RegNet_Weights.regnet_y_128gf_weights_url,
+                                                  model_dir="web/regnet_y_128gf_ImageNet1K_SWAG_E2E_V1.pth",
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")

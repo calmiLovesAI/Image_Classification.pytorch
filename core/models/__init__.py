@@ -3,7 +3,7 @@ from .vgg import VGG16, VGG19
 from .resnet import ResNet18, ResNet34, ResNet50, ResNet101, ResNet152,\
     ResNeXt50_32x4d, ResNeXt101_32x8d, ResNeXt101_64x4d, Wide_ResNet_50_2, Wide_ResNet_101_2
 from .vit import ViT_B_16, ViT_B_32, ViT_L_16, ViT_L_32, ViT_H_14
-from .regnet import RegNet_Y_400MF
+from .regnet import RegNet_Y_400MF, RegNet_Y_800MF, RegNet_Y_8GF, RegNet_Y_128GF
 
 
 MODELS = [AlexNet, VGG16, VGG19,
@@ -11,7 +11,7 @@ MODELS = [AlexNet, VGG16, VGG19,
           ResNeXt50_32x4d, ResNeXt101_32x8d, ResNeXt101_64x4d,
           Wide_ResNet_50_2, Wide_ResNet_101_2,
           ViT_B_16, ViT_B_32, ViT_L_16, ViT_L_32, ViT_H_14,
-          RegNet_Y_400MF]
+          RegNet_Y_400MF, RegNet_Y_800MF, RegNet_Y_8GF, RegNet_Y_128GF]
 
 MODELS_DICT = dict((k, v) for k, v in enumerate(MODELS))
 

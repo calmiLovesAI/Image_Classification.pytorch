@@ -21,3 +21,10 @@ class ResNet_Weights:
 
 class RegNet_Weights:
     regnet_y_400mf_weights_url = "https://download.pytorch.org/models/regnet_y_400mf-e6988f5f.pth"
+    regnet_y_800mf_weights_url = "https://download.pytorch.org/models/regnet_y_800mf-58fc7688.pth"
+    regnet_y_1_6gf_weights_url = "https://download.pytorch.org/models/regnet_y_1_6gf-0d7bc02a.pth"
+    regnet_y_3_2gf_weights_url = "https://download.pytorch.org/models/regnet_y_3_2gf-9180c971.pth"
+    regnet_y_8gf_weights_url = "https://download.pytorch.org/models/regnet_y_8gf-dc2b1b54.pth"
+    regnet_y_16gf_weights_url = "https://download.pytorch.org/models/regnet_y_16gf-3e4a00f9.pth"
+    regnet_y_32gf_weights_url = "https://download.pytorch.org/models/regnet_y_32gf-8db6d4b5.pth"
+    regnet_y_128gf_weights_url = "https://download.pytorch.org/models/regnet_y_128gf_swag-c8ce3e52.pth"
