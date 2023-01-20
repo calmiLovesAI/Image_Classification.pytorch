@@ -483,6 +483,8 @@ class ResNeXt101_64x4d(ResNet):
 
 
 class Wide_ResNet_50_2(ResNet):
+    model_name = "Wide_ResNet_50_2"
+
     def __init__(self, cfg):
         super().__init__(Bottleneck,
                          [3, 4, 6, 3],
@@ -508,6 +510,8 @@ class Wide_ResNet_50_2(ResNet):
 
 
 class Wide_ResNet_101_2(ResNet):
+    model_name = "Wide_ResNet_101_2"
+
     def __init__(self, cfg):
         super().__init__(Bottleneck,
                          [3, 4, 23, 3],
