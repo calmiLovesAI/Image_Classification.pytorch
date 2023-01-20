@@ -101,6 +101,8 @@ def train_loop(cfg, model, train_loader, test_loader, device):
                                       global_step=epoch * len(train_loader) + i)
                     writer.add_scalar(tag="Accuracy", scalar_value=correct_mean.result(),
                                       global_step=epoch * len(train_loader) + i)
+                    writer.add_scalar(tag="lr", scalar_value=optimizer.state_dict()["param_groups"][0]["lr"],
+                                      global_step=epoch * len(train_loader) + i)
 
                 pbar.set_postfix({"loss": "{}".format(loss_mean.result()),
                                   "accuracy": "{:.4f}%".format(100 * correct_mean.result())})
