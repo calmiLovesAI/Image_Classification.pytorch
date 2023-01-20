@@ -480,3 +480,53 @@ class ResNeXt101_64x4d(ResNet):
             print("Successfully loaded the state dict!")
             # 修改最后一层的结构
             self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
+
+
+class Wide_ResNet_50_2(ResNet):
+    def __init__(self, cfg):
+        super().__init__(Bottleneck,
+                         [3, 4, 6, 3],
+                         width_per_group=64*2)
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
+        default_shape = (224, 224)
+        input_shape = tuple(cfg["Train"]["input_size"][1:])
+        if input_shape != default_shape:
+            warnings.warn(
+                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
+                                                                                   default_shape))
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=ResNet_Weights.wide_resnet_50_2_weights_url,
+                                                  model_dir="web/wide_resnet_50_2_ImageNet1K.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded the state dict!")
+            # 修改最后一层的结构
+            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
+
+
+class Wide_ResNet_101_2(ResNet):
+    def __init__(self, cfg):
+        super().__init__(Bottleneck,
+                         [3, 4, 23, 3],
+                         width_per_group=64*2)
+        pretrained = cfg["Train"]["pretrained"]
+        device = cfg["device"]
+        num_classes = cfg["num_classes"]
+        default_shape = (224, 224)
+        input_shape = tuple(cfg["Train"]["input_size"][1:])
+        if input_shape != default_shape:
+            warnings.warn(
+                "你正在使用的输入图片大小：{}与{}默认的输入图片大小：{}不符！".format(input_shape, self.model_name,
+                                                                                   default_shape))
+        if pretrained:
+            # 加载预训练模型
+            state_dict = load_state_dict_from_url(url=ResNet_Weights.wide_resnet_101_2_weights_url,
+                                                  model_dir="web/wide_resnet_101_2_ImageNet1K.pth",
+                                                  map_location=device)
+            self.load_state_dict(state_dict)
+            print("Successfully loaded the state dict!")
+            # 修改最后一层的结构
+            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
