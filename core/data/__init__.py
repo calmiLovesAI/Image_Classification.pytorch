@@ -1,9 +1,10 @@
-from core.data.dataloader import BaseLoader, Cifar10Loader, Cifar100Loader
+from core.data.dataloader import BaseLoader, Cifar10Loader, Cifar100Loader, SVHNLoader
 
 DATASETS = {
     0: BaseLoader,
     1: Cifar10Loader,
-    2: Cifar100Loader
+    2: Cifar100Loader,
+    3: SVHNLoader
 }
 
 

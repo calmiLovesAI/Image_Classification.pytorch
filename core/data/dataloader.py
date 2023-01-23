@@ -1,5 +1,5 @@
 from torch.utils.data import DataLoader
-from torchvision.datasets import CIFAR10, CIFAR100
+from torchvision.datasets import CIFAR10, CIFAR100, SVHN
 
 import core.data.transforms as T
 from core.data.custom_dataset import ImageDataset
@@ -48,7 +48,7 @@ class Cifar10Loader(BaseLoader):
                                download=True)
         classes = self.cfg["Cifar10"]["categories"]
         num_classes = len(classes)
-        print("正在使用{}和{}".format(cifar10_train, cifar10_test))
+        print("正在使用{}\n {}".format(cifar10_train, cifar10_test))
         print("其中有{}个类别，分别是：{}".format(num_classes, classes))
         train_dataloader = DataLoader(cifar10_train, batch_size=self.batch_size, shuffle=True)
         test_dataloader = DataLoader(cifar10_test, batch_size=self.batch_size, shuffle=False)
@@ -71,8 +71,35 @@ class Cifar100Loader(BaseLoader):
                                  download=True)
         classes = self.cfg["Cifar100"]["categories"]
         num_classes = 100
-        print("正在使用{}和{}".format(cifar100_train, cifar100_test))
+        print("正在使用{}\n {}".format(cifar100_train, cifar100_test))
         print("其中有{}个类别，分别是：{}等".format(num_classes, classes))
         train_dataloader = DataLoader(cifar100_train, batch_size=self.batch_size, shuffle=True)
         test_dataloader = DataLoader(cifar100_test, batch_size=self.batch_size, shuffle=False)
+        return classes, num_classes, train_dataloader, test_dataloader
+
+
+class SVHNLoader(BaseLoader):
+    def __init__(self, cfg):
+        super().__init__(cfg)
+        self.name = "svhn"
+
+    def __call__(self, *args, **kwargs):
+        svhn_train = SVHN(root=self.cfg["SVHN"]["root"],
+                          split="train",
+                          transform=self.transforms,
+                          download=True)
+        svhn_test = SVHN(root=self.cfg["SVHN"]["root"],
+                         split="test",
+                         transform=self.transforms,
+                         download=True)
+        svhn_extra = SVHN(root=self.cfg["SVHN"]["root"],
+                          split="extra",
+                          transform=self.transforms,
+                          download=True)
+        classes = self.cfg["SVHN"]["categories"]
+        num_classes = 10
+        print(f"正在使用{svhn_train}\n {svhn_test}\n {svhn_extra}")
+        print(f"其中有{num_classes}个类别，分别是：{classes}等")
+        train_dataloader = DataLoader(svhn_train, batch_size=self.batch_size, shuffle=True)
+        test_dataloader = DataLoader(svhn_test, batch_size=self.batch_size, shuffle=False)
         return classes, num_classes, train_dataloader, test_dataloader
