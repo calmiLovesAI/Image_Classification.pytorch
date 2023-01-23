@@ -82,8 +82,7 @@ class MobileNetV1(nn.Module):
         x = self.layer_8(x)
         x = self.layer_9(x)
         x = self.pool(x)
-        x.squeeze_(-1)
-        x.squeeze_(-1)
+        x = torch.flatten(x, 1)
         x = self.fc(x)
         return x
 
