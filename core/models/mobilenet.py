@@ -5,7 +5,8 @@ from core.utils import auto_padding
 
 
 class SeparableConv2d(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, padding=0, depth_multiplier=1):
+    def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, padding=0, depth_multiplier=1,
+                 width_multiplier=1.0):
         """
         深度可分离卷积
         :param in_channels: 输入通道数
@@ -14,14 +15,18 @@ class SeparableConv2d(nn.Module):
         :param stride: depthwise卷积的步长
         :param padding:  depthwise卷积的padding
         :param depth_multiplier: 在depthwise步骤中每个输入通道生成多少个输出通道
+        :param width_multiplier: 用于将模型变小和降低计算复杂度的参数，取值范围：(0, 1]
         """
         super().__init__()
-        self.depthwise_conv = nn.Conv2d(in_channels, depth_multiplier * in_channels, kernel_size, stride=stride,
+        in_channels = int(in_channels * width_multiplier)
+        depthwise_channel = int(in_channels * depth_multiplier)
+        out_channels = int(out_channels * width_multiplier)
+        self.depthwise_conv = nn.Conv2d(in_channels, depthwise_channel, kernel_size, stride=stride,
                                         padding=padding, groups=in_channels)
-        self.bn1 = nn.BatchNorm2d(num_features=depth_multiplier * in_channels)
+        self.bn1 = nn.BatchNorm2d(num_features=depthwise_channel)
         self.act1 = nn.ReLU(inplace=True)
 
-        self.pointwise_conv = nn.Conv2d(depth_multiplier * in_channels, out_channels, 1, 1, padding=0)
+        self.pointwise_conv = nn.Conv2d(depthwise_channel, out_channels, 1, 1, padding=0)
         self.bn2 = nn.BatchNorm2d(num_features=out_channels)
         self.act2 = nn.ReLU(inplace=True)
 
@@ -34,7 +39,7 @@ class SeparableConv2d(nn.Module):
 class MobileNetV1(nn.Module):
     model_name = "MobileNetV1"
 
-    def __init__(self, cfg):
+    def __init__(self, cfg, width_multiplier=1.0):
         """
         URL: https://arxiv.org/abs/1704.04861
         @article{howard2017mobilenets,
@@ -44,29 +49,32 @@ class MobileNetV1(nn.Module):
           year={2017}
         }
         :param cfg:
+        :param width_multiplier: 用于将模型变小和降低计算复杂度的参数，取值范围：(0, 1]
         """
         super().__init__()
         num_classes = cfg["num_classes"]
-        self.conv1 = nn.Conv2d(3, 32, 3, 2, padding=1)
-        self.bn = nn.BatchNorm2d(32)
+        n = int(32 * width_multiplier)
+        self.conv1 = nn.Conv2d(3, n, 3, 2, padding=1)
+        self.bn = nn.BatchNorm2d(n)
         self.relu = nn.ReLU(True)
-        self.layer_1 = self._make_layer(32, 64, 3, 1, 1)
-        self.layer_2 = self._make_layer(64, 128, 3, 2, 1)
-        self.layer_3 = self._make_layer(128, 128, 3, 1, 1)
-        self.layer_4 = self._make_layer(128, 256, 3, 2, 1)
-        self.layer_5 = self._make_layer(256, 256, 3, 1, 1)
-        self.layer_6 = self._make_layer(256, 512, 3, 2, 1)
-        self.layer_7 = self._make_layer(512, 512, 3, 1, 5)
-        self.layer_8 = self._make_layer(512, 1024, 3, 2, 1)
-        self.layer_9 = self._make_layer(1024, 1024, 3, 1, 1)
+        self.layer_1 = self._make_layer(32, 64, 3, 1, 1, width_multiplier)
+        self.layer_2 = self._make_layer(64, 128, 3, 2, 1, width_multiplier)
+        self.layer_3 = self._make_layer(128, 128, 3, 1, 1, width_multiplier)
+        self.layer_4 = self._make_layer(128, 256, 3, 2, 1, width_multiplier)
+        self.layer_5 = self._make_layer(256, 256, 3, 1, 1, width_multiplier)
+        self.layer_6 = self._make_layer(256, 512, 3, 2, 1, width_multiplier)
+        self.layer_7 = self._make_layer(512, 512, 3, 1, 5, width_multiplier)
+        self.layer_8 = self._make_layer(512, 1024, 3, 2, 1, width_multiplier)
+        self.layer_9 = self._make_layer(1024, 1024, 3, 1, 1, width_multiplier)
 
         self.pool = nn.AdaptiveAvgPool2d(1)
-        self.fc = nn.Linear(1024, num_classes)
+        self.fc = nn.Linear(int(1024 * width_multiplier), num_classes)
 
-    def _make_layer(self, c_in, c_out, kernel_size=3, stride=1, num_layers=1):
+    def _make_layer(self, c_in, c_out, kernel_size=3, stride=1, num_layers=1, width_multiplier=1.0):
         layers = []
         for _ in range(num_layers):
-            layers.append(SeparableConv2d(c_in, c_out, kernel_size, stride, padding=auto_padding(kernel_size, stride)))
+            layers.append(SeparableConv2d(c_in, c_out, kernel_size, stride, padding=auto_padding(kernel_size, stride),
+                                          width_multiplier=width_multiplier))
         return nn.Sequential(*layers)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -86,3 +94,10 @@ class MobileNetV1(nn.Module):
         x = self.fc(x)
         return x
 
+
+
+if __name__ == '__main__':
+    x = torch.randn(2, 3, 224, 224)
+    net = MobileNetV1(cfg={"num_classes": 10}, width_multiplier=0.5)
+    print(net)
+    y = net(x)
