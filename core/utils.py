@@ -1,3 +1,4 @@
+import math
 import os.path
 import time
 from typing import List
@@ -6,6 +7,20 @@ import cv2
 import numpy as np
 import torch
 import torchvision.transforms.functional as F
+
+
+def auto_padding(k, s, d=1):
+    """
+
+    Args:
+        k: kernel size
+        s: stride
+        d: dilation
+
+    Returns: padding value
+
+    """
+    return math.ceil((d*(k-1)+1-s)/2)
 
 
 def opencv_read_image(image_path):
