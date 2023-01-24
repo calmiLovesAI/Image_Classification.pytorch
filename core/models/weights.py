@@ -28,3 +28,7 @@ class RegNet_Weights:
     regnet_y_16gf_weights_url = "https://download.pytorch.org/models/regnet_y_16gf-3e4a00f9.pth"
     regnet_y_32gf_weights_url = "https://download.pytorch.org/models/regnet_y_32gf-8db6d4b5.pth"
     regnet_y_128gf_weights_url = "https://download.pytorch.org/models/regnet_y_128gf_swag-c8ce3e52.pth"
+
+
+class MobileNet_Weights:
+    mobilenet_v2_weights_url = "https://download.pytorch.org/models/mobilenet_v2-7ebf99e0.pth"

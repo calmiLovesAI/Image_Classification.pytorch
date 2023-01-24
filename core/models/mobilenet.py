@@ -95,7 +95,6 @@ class MobileNetV1(nn.Module):
         return x
 
 
-
 if __name__ == '__main__':
     x = torch.randn(2, 3, 224, 224)
     net = MobileNetV1(cfg={"num_classes": 10}, width_multiplier=0.5)
