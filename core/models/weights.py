@@ -32,3 +32,5 @@ class RegNet_Weights:
 
 class MobileNet_Weights:
     mobilenet_v2_weights_url = "https://download.pytorch.org/models/mobilenet_v2-7ebf99e0.pth"
+    mobilenet_v3_large_weights_url = "https://download.pytorch.org/models/mobilenet_v3_large-5c1a4163.pth"
+    mobilenet_v3_small_weights_url = "https://download.pytorch.org/models/mobilenet_v3_small-047dcff4.pth"
