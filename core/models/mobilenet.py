@@ -54,7 +54,7 @@ class MobileNetV1(nn.Module):
         super().__init__()
         num_classes = cfg["num_classes"]
         n = int(32 * width_multiplier)
-        self.conv1 = nn.Conv2d(3, n, 3, 2, padding=1)
+        self.conv1 = nn.Conv2d(cfg["Train"]["input_size"][0], n, 3, 2, padding=1)
         self.bn = nn.BatchNorm2d(n)
         self.relu = nn.ReLU(True)
         self.layer_1 = self._make_layer(32, 64, 3, 1, 1, width_multiplier)
