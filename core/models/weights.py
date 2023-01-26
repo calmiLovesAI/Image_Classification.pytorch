@@ -46,3 +46,10 @@ class ShuffleNetV2_Weights:
 class EfficientNet_Weights:
     efficientnet_b0_weights_url = "https://download.pytorch.org/models/efficientnet_b0_rwightman-3dd342df.pth"
     efficientnet_v2_s_weights_url = "https://download.pytorch.org/models/efficientnet_v2_s-dd5fe13b.pth"
+
+
+class ConvNeXt_Weights:
+    convnext_tiny_weights_url = "https://download.pytorch.org/models/convnext_tiny-983f1562.pth"
+    convnext_small_weights_url = "https://download.pytorch.org/models/convnext_small-0c510722.pth"
+    convnext_base_weights_url = "https://download.pytorch.org/models/convnext_base-6075fbad.pth"
+    convnext_large_weights_url = "https://download.pytorch.org/models/convnext_large-ea097f82.pth"
