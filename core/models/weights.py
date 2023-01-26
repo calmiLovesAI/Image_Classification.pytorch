@@ -36,8 +36,13 @@ class MobileNet_Weights:
     mobilenet_v3_small_weights_url = "https://download.pytorch.org/models/mobilenet_v3_small-047dcff4.pth"
 
 
-class ShuffleNetV2_weights:
+class ShuffleNetV2_Weights:
     shufflenet_v2_x0_5_weights_url = "https://download.pytorch.org/models/shufflenetv2_x0.5-f707e7126e.pth"
     shufflenet_v2_x1_0_weights_url = "https://download.pytorch.org/models/shufflenetv2_x1-5666bf0f80.pth"
     shufflenet_v2_x1_5_weights_url = "https://download.pytorch.org/models/shufflenetv2_x1_5-3c479a10.pth"
     shufflenet_v2_x2_0_weights_url = "https://download.pytorch.org/models/shufflenetv2_x2_0-8be3c8ee.pth"
+
+
+class EfficientNet_Weights:
+    efficientnet_b0_weights_url = "https://download.pytorch.org/models/efficientnet_b0_rwightman-3dd342df.pth"
+    efficientnet_v2_s_weights_url = "https://download.pytorch.org/models/efficientnet_v2_s-dd5fe13b.pth"

@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 from torch import Tensor
 
-from core.models.weights import ShuffleNetV2_weights
+from core.models.weights import ShuffleNetV2_Weights
 from core.utils import load_state_dict_from_url
 
 
@@ -169,7 +169,7 @@ class ShuffleNetV2_x0_5(ShuffleNetV2):
 
         if pretrained:
             # 加载预训练模型
-            state_dict = load_state_dict_from_url(url=ShuffleNetV2_weights.shufflenet_v2_x0_5_weights_url,
+            state_dict = load_state_dict_from_url(url=ShuffleNetV2_Weights.shufflenet_v2_x0_5_weights_url,
                                                   model_dir="web/shufflenet_v2_x0_5_ImageNet1K.pth",
                                                   map_location=device)
             self.load_state_dict(state_dict)
@@ -196,7 +196,7 @@ class ShuffleNetV2_x1_0(ShuffleNetV2):
 
         if pretrained:
             # 加载预训练模型
-            state_dict = load_state_dict_from_url(url=ShuffleNetV2_weights.shufflenet_v2_x1_0_weights_url,
+            state_dict = load_state_dict_from_url(url=ShuffleNetV2_Weights.shufflenet_v2_x1_0_weights_url,
                                                   model_dir="web/shufflenet_v2_x1_0_ImageNet1K.pth",
                                                   map_location=device)
             self.load_state_dict(state_dict)
@@ -223,7 +223,7 @@ class ShuffleNetV2_x1_5(ShuffleNetV2):
 
         if pretrained:
             # 加载预训练模型
-            state_dict = load_state_dict_from_url(url=ShuffleNetV2_weights.shufflenet_v2_x1_5_weights_url,
+            state_dict = load_state_dict_from_url(url=ShuffleNetV2_Weights.shufflenet_v2_x1_5_weights_url,
                                                   model_dir="web/shufflenet_v2_x1_5_ImageNet1K.pth",
                                                   map_location=device)
             self.load_state_dict(state_dict)
@@ -250,7 +250,7 @@ class ShuffleNetV2_x2_0(ShuffleNetV2):
 
         if pretrained:
             # 加载预训练模型
-            state_dict = load_state_dict_from_url(url=ShuffleNetV2_weights.shufflenet_v2_x2_0_weights_url,
+            state_dict = load_state_dict_from_url(url=ShuffleNetV2_Weights.shufflenet_v2_x2_0_weights_url,
                                                   model_dir="web/shufflenet_v2_x2_0_ImageNet1K.pth",
                                                   map_location=device)
             self.load_state_dict(state_dict)
