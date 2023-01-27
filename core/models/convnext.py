@@ -186,11 +186,11 @@ class ConvNeXt_Tiny(ConvNeXt):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            norm_layer = partial(LayerNorm2d, eps=1e-6)
-            # 修改最后一层的结构
-            self.classifier = nn.Sequential(
-                norm_layer(self.classifier_in), nn.Flatten(1), nn.Linear(self.classifier_in, num_classes)
-            )
+        norm_layer = partial(LayerNorm2d, eps=1e-6)
+        # 修改最后一层的结构
+        self.classifier = nn.Sequential(
+            norm_layer(self.classifier_in), nn.Flatten(1), nn.Linear(self.classifier_in, num_classes)
+        )
 
 
 class ConvNeXt_Small(ConvNeXt):
@@ -219,11 +219,11 @@ class ConvNeXt_Small(ConvNeXt):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            norm_layer = partial(LayerNorm2d, eps=1e-6)
-            # 修改最后一层的结构
-            self.classifier = nn.Sequential(
-                norm_layer(self.classifier_in), nn.Flatten(1), nn.Linear(self.classifier_in, num_classes)
-            )
+        norm_layer = partial(LayerNorm2d, eps=1e-6)
+        # 修改最后一层的结构
+        self.classifier = nn.Sequential(
+            norm_layer(self.classifier_in), nn.Flatten(1), nn.Linear(self.classifier_in, num_classes)
+        )
 
 
 class ConvNeXt_Base(ConvNeXt):
@@ -252,11 +252,11 @@ class ConvNeXt_Base(ConvNeXt):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            norm_layer = partial(LayerNorm2d, eps=1e-6)
-            # 修改最后一层的结构
-            self.classifier = nn.Sequential(
-                norm_layer(self.classifier_in), nn.Flatten(1), nn.Linear(self.classifier_in, num_classes)
-            )
+        norm_layer = partial(LayerNorm2d, eps=1e-6)
+        # 修改最后一层的结构
+        self.classifier = nn.Sequential(
+            norm_layer(self.classifier_in), nn.Flatten(1), nn.Linear(self.classifier_in, num_classes)
+        )
 
 
 class ConvNeXt_Large(ConvNeXt):
@@ -285,8 +285,8 @@ class ConvNeXt_Large(ConvNeXt):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            norm_layer = partial(LayerNorm2d, eps=1e-6)
-            # 修改最后一层的结构
-            self.classifier = nn.Sequential(
-                norm_layer(self.classifier_in), nn.Flatten(1), nn.Linear(self.classifier_in, num_classes)
-            )
+        norm_layer = partial(LayerNorm2d, eps=1e-6)
+        # 修改最后一层的结构
+        self.classifier = nn.Sequential(
+            norm_layer(self.classifier_in), nn.Flatten(1), nn.Linear(self.classifier_in, num_classes)
+        )

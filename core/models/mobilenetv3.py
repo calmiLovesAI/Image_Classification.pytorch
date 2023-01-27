@@ -280,13 +280,13 @@ class MobileNetV3Large(MobileNetV3):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.classifier = nn.Sequential(
-                nn.Linear(self.classifier_input_channel, last_channel),
-                nn.Hardswish(inplace=True),
-                nn.Dropout(p=0.2, inplace=True),
-                nn.Linear(last_channel, num_classes),
-            )
+        # 修改最后一层的结构
+        self.classifier = nn.Sequential(
+            nn.Linear(self.classifier_input_channel, last_channel),
+            nn.Hardswish(inplace=True),
+            nn.Dropout(p=0.2, inplace=True),
+            nn.Linear(last_channel, num_classes),
+        )
 
 
 class MobileNetV3Small(MobileNetV3):
@@ -312,10 +312,10 @@ class MobileNetV3Small(MobileNetV3):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.classifier = nn.Sequential(
-                nn.Linear(self.classifier_input_channel, last_channel),
-                nn.Hardswish(inplace=True),
-                nn.Dropout(p=0.2, inplace=True),
-                nn.Linear(last_channel, num_classes),
-            )
+        # 修改最后一层的结构
+        self.classifier = nn.Sequential(
+            nn.Linear(self.classifier_input_channel, last_channel),
+            nn.Hardswish(inplace=True),
+            nn.Dropout(p=0.2, inplace=True),
+            nn.Linear(last_channel, num_classes),
+        )

@@ -403,11 +403,11 @@ class EfficientNet_B0(EfficientNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.classifier = nn.Sequential(
-                nn.Dropout(p=0.2, inplace=True),
-                nn.Linear(self.classifier_in_channel, num_classes),
-            )
+        # 修改最后一层的结构
+        self.classifier = nn.Sequential(
+            nn.Dropout(p=0.2, inplace=True),
+            nn.Linear(self.classifier_in_channel, num_classes),
+        )
 
 
 class EfficientNet_V2_S(EfficientNet):
@@ -434,8 +434,8 @@ class EfficientNet_V2_S(EfficientNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.classifier = nn.Sequential(
-                nn.Dropout(p=0.2, inplace=True),
-                nn.Linear(self.classifier_in_channel, num_classes),
-            )
+        # 修改最后一层的结构
+        self.classifier = nn.Sequential(
+            nn.Dropout(p=0.2, inplace=True),
+            nn.Linear(self.classifier_in_channel, num_classes),
+        )

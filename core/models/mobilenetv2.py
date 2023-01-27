@@ -190,8 +190,8 @@ class MobileNetV2Pretrained(MobileNetV2):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.classifier = nn.Sequential(
-                nn.Dropout(p=0.2),
-                nn.Linear(self.last_channel, num_classes),
-            )
+        # 修改最后一层的结构
+        self.classifier = nn.Sequential(
+            nn.Dropout(p=0.2),
+            nn.Linear(self.last_channel, num_classes),
+        )

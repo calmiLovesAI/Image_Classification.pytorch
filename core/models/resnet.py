@@ -290,8 +290,8 @@ class ResNet18(ResNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(512 * BasicBlock.expansion, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(512 * BasicBlock.expansion, num_classes)
 
 
 class ResNet34(ResNet):
@@ -316,8 +316,8 @@ class ResNet34(ResNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(512 * BasicBlock.expansion, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(512 * BasicBlock.expansion, num_classes)
 
 
 class ResNet50(ResNet):
@@ -342,8 +342,8 @@ class ResNet50(ResNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
 
 
 class ResNet101(ResNet):
@@ -368,8 +368,8 @@ class ResNet101(ResNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
 
 
 class ResNet152(ResNet):
@@ -394,8 +394,8 @@ class ResNet152(ResNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
 
 
 class ResNeXt50_32x4d(ResNet):
@@ -422,8 +422,8 @@ class ResNeXt50_32x4d(ResNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
 
 
 class ResNeXt101_32x8d(ResNet):
@@ -450,8 +450,8 @@ class ResNeXt101_32x8d(ResNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
 
 
 class ResNeXt101_64x4d(ResNet):
@@ -478,8 +478,8 @@ class ResNeXt101_64x4d(ResNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
 
 
 class Wide_ResNet_50_2(ResNet):
@@ -505,8 +505,8 @@ class Wide_ResNet_50_2(ResNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
 
 
 class Wide_ResNet_101_2(ResNet):
@@ -532,5 +532,5 @@ class Wide_ResNet_101_2(ResNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(512 * Bottleneck.expansion, num_classes)

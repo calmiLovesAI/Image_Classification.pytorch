@@ -380,8 +380,8 @@ class RegNet_Y_400MF(RegNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(self.fc_channel_in, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(self.fc_channel_in, num_classes)
 
 
 class RegNet_Y_800MF(RegNet):
@@ -410,8 +410,8 @@ class RegNet_Y_800MF(RegNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(self.fc_channel_in, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(self.fc_channel_in, num_classes)
 
 
 class RegNet_Y_8GF(RegNet):
@@ -440,8 +440,8 @@ class RegNet_Y_8GF(RegNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(self.fc_channel_in, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(self.fc_channel_in, num_classes)
 
 
 class RegNet_Y_128GF(RegNet):
@@ -470,5 +470,5 @@ class RegNet_Y_128GF(RegNet):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(self.fc_channel_in, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(self.fc_channel_in, num_classes)

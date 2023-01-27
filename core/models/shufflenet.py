@@ -174,8 +174,8 @@ class ShuffleNetV2_x0_5(ShuffleNetV2):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(self.fc_in, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(self.fc_in, num_classes)
 
 
 class ShuffleNetV2_x1_0(ShuffleNetV2):
@@ -201,8 +201,8 @@ class ShuffleNetV2_x1_0(ShuffleNetV2):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(self.fc_in, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(self.fc_in, num_classes)
 
 
 class ShuffleNetV2_x1_5(ShuffleNetV2):
@@ -228,8 +228,8 @@ class ShuffleNetV2_x1_5(ShuffleNetV2):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(self.fc_in, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(self.fc_in, num_classes)
 
 
 class ShuffleNetV2_x2_0(ShuffleNetV2):
@@ -255,5 +255,5 @@ class ShuffleNetV2_x2_0(ShuffleNetV2):
                                                   map_location=device)
             self.load_state_dict(state_dict)
             print("Successfully loaded the state dict!")
-            # 修改最后一层的结构
-            self.fc = nn.Linear(self.fc_in, num_classes)
+        # 修改最后一层的结构
+        self.fc = nn.Linear(self.fc_in, num_classes)
