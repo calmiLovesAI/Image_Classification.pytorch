@@ -1,5 +1,6 @@
 Custom:
-  root: ""
+  train_root: ""
+  val_root: ""
 Cifar10:
   root: "./datasets/cifar10"
   categories:

@@ -2,12 +2,12 @@ from torch.utils.data import DataLoader
 from torchvision.datasets import CIFAR10, CIFAR100, SVHN
 
 import core.data.transforms as T
-from core.data.custom_dataset import ImageDataset
+from core.data.custom_dataset import ImageDataset, ImageDatasetV2
 
 
 class BaseLoader:
     """
-    适用于自定义数据集
+    适用于自定义数据集（训练集和验证集没有分开）
     """
 
     def __init__(self, cfg):
@@ -27,6 +27,33 @@ class BaseLoader:
                                  target_transform=None)
         classes, num_classes = train_data.get_classes()
         print("正在使用{}, 其中有{}个图像类别，分别为：{}".format(self.cfg["Custom"]["root"], num_classes, classes))
+        train_dataloader = DataLoader(train_data, batch_size=self.batch_size, shuffle=True)
+        test_dataloader = DataLoader(test_data, batch_size=self.batch_size, shuffle=False)
+        return classes, num_classes, train_dataloader, test_dataloader
+
+
+class BaseLoaderV2:
+    """
+    适用于训练集和验证集分开的情况
+    """
+
+    def __init__(self, cfg):
+        self.cfg = cfg
+        self.batch_size = cfg["Train"]["batch_size"]
+        self.input_size = cfg["Train"]["input_size"][1:]
+        self.transforms = T.Compose([
+            T.ToTensor(),
+            T.Resize(size=self.input_size),
+        ])
+        self.name = "Custom Dataset V2"
+
+    def __call__(self, *args, **kwargs):
+        train_data = ImageDatasetV2(self.cfg["Custom"]["train_root"], self.cfg["Custom"]["val_root"],
+                                    train=True, transform=self.transforms, target_transform=None)
+        test_data = ImageDatasetV2(self.cfg["Custom"]["root"], self.cfg["Custom"]["val_root"],
+                                   train=False, transform=self.transforms, target_transform=None)
+        classes, num_classes = train_data.get_classes()
+        print("正在使用{}, 其中有{}个图像类别，分别为：{}".format(self.cfg["Custom"]["train_root"], num_classes, classes))
         train_dataloader = DataLoader(train_data, batch_size=self.batch_size, shuffle=True)
         test_dataloader = DataLoader(test_data, batch_size=self.batch_size, shuffle=False)
         return classes, num_classes, train_dataloader, test_dataloader
