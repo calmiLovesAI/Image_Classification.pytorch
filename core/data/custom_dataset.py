@@ -7,13 +7,20 @@ from core.utils import read_image
 
 
 class ImageDataset(Dataset):
-    def __init__(self, root, train=True, train_ratio=0.8, transform=None, target_transform=None):
+    def __init__(self,
+                 root,
+                 train=True,
+                 val_ratio=0.2,
+                 use_all_data=False,
+                 transform=None,
+                 target_transform=None):
         super(ImageDataset, self).__init__()
         self.transform = transform
         self.target_transform = target_transform
 
         self.images_root = root
-        self.train_ratio = train_ratio
+        self.train_ratio = 1 - val_ratio
+        self.use_all_data = use_all_data
         self.images = list()
 
         # 'self.images_root'路径下的文件夹名就是类别名
@@ -39,7 +46,10 @@ class ImageDataset(Dataset):
                 class_set.append([str(img_dir), folder.name])
             # 属于个类别的图片数量
             num_images = len(class_set)
-            train_set.extend(class_set[:int(self.train_ratio * num_images)])
+            if self.use_all_data:
+                train_set.extend(class_set)
+            else:
+                train_set.extend(class_set[:int(self.train_ratio * num_images)])
             test_set.extend(class_set[int(self.train_ratio * num_images):])
         return train_set, test_set
 
