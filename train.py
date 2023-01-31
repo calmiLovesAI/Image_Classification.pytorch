@@ -10,7 +10,7 @@ from tqdm import tqdm
 from core.checkpoint import CheckPoint
 from core.data import load_dataset
 from core.loss import cross_entropy_loss
-from core.metrics import MeanMetric
+from core.metrics import MeanMetric, multi_label_f1_score, accuracy
 from core.models import select_model
 from core.optimizer import get_optimizer, get_lr_scheduler
 from core.parse_yaml import Yaml
@@ -50,12 +50,13 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     # 损失函数
     loss_fn = cross_entropy_loss()
     loss_mean = MeanMetric()
-    correct_mean = MeanMetric()  # 一个epoch的平均正确率
+    f1_mean = MeanMetric()
+    acc_mean = MeanMetric()
 
     start_epoch = 0
     if load_weights != "":
         model, optimizer, scheduler, start_epoch = CheckPoint.load(path=load_weights, device=device, model=model,
-                                                        optimizer=optimizer, scheduler=scheduler)
+                                                                   optimizer=optimizer, scheduler=scheduler)
         start_epoch += 1
         print(f"加载权重文件{load_weights}成功！将从epoch-{start_epoch}处恢复训练")
 
@@ -72,7 +73,8 @@ def train_loop(cfg, model, train_loader, test_loader, device):
     for epoch in range(start_epoch, epochs):
         model.train()  # 切换为训练模式
         loss_mean.reset()
-        correct_mean.reset()
+        f1_mean.reset()
+        acc_mean.reset()
         with tqdm(train_loader, desc="Epoch-{}/{}".format(epoch, epochs)) as pbar:
             for i, (images, targets) in enumerate(pbar):
                 batch_size = images.size(0)
@@ -94,31 +96,38 @@ def train_loop(cfg, model, train_loader, test_loader, device):
                     optimizer.step()
 
                 loss_mean.update(loss.item())
-                correct_mean.update((preds.argmax(1) == targets).type(torch.float).sum().item() / batch_size)
+                f1_mean.update(multi_label_f1_score(preds, targets, cfg["num_classes"], device).item())
+                acc_mean.update(accuracy(preds, targets, num_batches=batch_size).item())
 
                 if tensorboard_on:
                     writer.add_scalar(tag="Loss", scalar_value=loss_mean.result(),
                                       global_step=epoch * len(train_loader) + i)
-                    writer.add_scalar(tag="Accuracy", scalar_value=correct_mean.result(),
+                    writer.add_scalar(tag="Accuracy", scalar_value=acc_mean.result(),
+                                      global_step=epoch * len(train_loader) + i)
+                    writer.add_scalar(tag="F1 score", scalar_value=f1_mean.result(),
                                       global_step=epoch * len(train_loader) + i)
                     writer.add_scalar(tag="lr", scalar_value=optimizer.state_dict()["param_groups"][0]["lr"],
                                       global_step=epoch * len(train_loader) + i)
 
                 pbar.set_postfix({"loss": "{}".format(loss_mean.result()),
-                                  "accuracy": "{:.4f}%".format(100 * correct_mean.result())})
+                                  "accuracy": "{:.4f}%".format(100 * acc_mean.result()),
+                                  "f1_score": "{:.6f}".format(f1_mean.result())})
 
                 if i % cfg["Train"]["log"]["print_freq"] == 0:
-                    train_logger.info(msg="Epoch: {}/{}, step: {}/{}, Loss: {}, Accuracy: {:.4f}%".format(epoch, epochs,
-                                                                                                          i,
-                                                                                                          len(train_loader),
-                                                                                                          loss_mean.result(),
-                                                                                                          100 * correct_mean.result()))
+                    train_logger.info(
+                        msg="Epoch: {}/{}, step: {}/{}, Loss: {}, Accuracy: {:.4f}%, F1 score: {:.6f}".format(epoch,
+                                                                                                              epochs,
+                                                                                                              i,
+                                                                                                              len(train_loader),
+                                                                                                              loss_mean.result(),
+                                                                                                              100 * acc_mean.result(),
+                                                                                                              f1_mean.result()))
 
         if scheduler is not None:
             scheduler.step()
 
         # 验证
-        evaluate_result = evaluate_loop(model, test_loader, device)
+        evaluate_result = evaluate_loop(model, test_loader, cfg["num_classes"], device)
         train_logger.info(msg=f"===========Evaluate after epoch-{epoch}============\n {evaluate_result}")
 
         if epoch % save_frequency == 0:
