@@ -1,7 +1,7 @@
+import math
+
 import torch
 import torch.nn as nn
-
-from core.utils import auto_padding
 
 
 class SeparableConv2d(nn.Module):
@@ -71,9 +71,10 @@ class MobileNetV1(nn.Module):
         self.fc = nn.Linear(int(1024 * width_multiplier), num_classes)
 
     def _make_layer(self, c_in, c_out, kernel_size=3, stride=1, num_layers=1, width_multiplier=1.0):
+        p = math.ceil((kernel_size - stride) / 2)
         layers = []
         for _ in range(num_layers):
-            layers.append(SeparableConv2d(c_in, c_out, kernel_size, stride, padding=auto_padding(kernel_size, stride),
+            layers.append(SeparableConv2d(c_in, c_out, kernel_size, stride, padding=p,
                                           width_multiplier=width_multiplier))
         return nn.Sequential(*layers)
 

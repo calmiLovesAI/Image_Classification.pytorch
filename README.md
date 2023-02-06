@@ -6,7 +6,7 @@
 - torch>=1.13.1
 - torchvision>=0.14.1
 - python>=3.10.9
-然后在终端中运行如下：
+然后在终端中运行：
 ```commandline
 git clone https://github.com/calmisential/Image_Classification.pytorch.git
 cd Image_Classification.pytorch
